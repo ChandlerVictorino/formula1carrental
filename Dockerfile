@@ -1,4 +1,4 @@
-FROM php:8.1-apache
+FROM php:8.0-apache
 
 RUN apt-get update && apt-get install -y \
     libpng-dev libjpeg-dev libonig-dev libxml2-dev libzip-dev unzip git curl \
