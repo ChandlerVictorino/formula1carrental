@@ -1,17 +1,27 @@
-# Use official PHP image with Apache
-FROM php:8.0-apache
+FROM php:8.1-apache
 
-# Enable Apache mod_rewrite
+RUN apt-get update && apt-get install -y \
+    libicu-dev unzip zip \
+    && docker-php-ext-install intl mysqli pdo pdo_mysql
+
 RUN a2enmod rewrite
 
-# Set working directory
+#Force Apache to serve from /public
+RUN echo '<VirtualHost *:80>\n\
+    DocumentRoot /var/www/html/public\n\
+    <Directory /var/www/html/public>\n\
+        Options Indexes FollowSymLinks\n\
+        AllowOverride All\n\
+        Require all granted\n\
+    </Directory>\n\
+</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
+
+# Optional: Fix DirectoryIndex
+RUN echo 'DirectoryIndex index.php index.html' >> /etc/apache2/apache2.conf
+
 WORKDIR /var/www/html
 
-# Copy project files
-COPY . /var/www/html/
+COPY . .
 
-# Install mysqli extension
-RUN docker-php-ext-install mysqli
-
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html/writable
