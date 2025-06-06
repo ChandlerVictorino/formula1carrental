@@ -1,0 +1,14 @@
+**Database Name: rental_mobil**
+
+
+**Recommended PHP Version 5.6.3 and 7.4.12**
+
+URL: "http://localhost/Formula1_CarRental"
+
+Remember: Do not change the project's folder name without updating the $config['base_url']
+
+
+**Login Details** 
+
+Username: admin
+Password: password123
