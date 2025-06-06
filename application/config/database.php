@@ -75,8 +75,7 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'formula1-carrental-ntc-7bab.f.aivencloud.com',
-	'port'     => 13275,
+	'hostname' => 'formula1-carrental-ntc-7bab.f.aivencloud.com', 
 	'username' => 'avnadmin',
 	'password' => 'AVNS_0w8vvyWyzFsoZ0Pt6qx',
 	'database' => 'defaultdb',
@@ -89,12 +88,9 @@ $db['default'] = array(
 	'char_set' => 'utf8',
 	'dbcollat' => 'utf8_general_ci',
 	'swap_pre' => '',
-	'encrypt'  => TRUE,
+	'encrypt' => FALSE,
 	'compress' => FALSE,
 	'stricton' => FALSE,
 	'failover' => array(),
-	'save_queries' => TRUE,
-	'ssl_ca'   => '/certs/ca.pem',
-	'ssl_cert' => '/certs/client-cert.pem',
-	'ssl_key'  => '/certs/client-key.pem',
+	'save_queries' => TRUE
 );
