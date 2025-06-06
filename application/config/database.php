@@ -75,10 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => getenv('DB_HOST'),
-	'username' => getenv('DB_USER'),
-	'password' => getenv('DB_PASS'),
-	'database' => getenv('DB_NAME'),
+	'hostname' => 'formula1-carrental-ntc-7bab.f.aivencloud.com',
+	'username' => 'avnadmin',
+	'password' => '',
+	'database' => 'defaultdb',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
