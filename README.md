@@ -8,6 +8,7 @@ Instructions -----------------
 
 **Recommended PHP Version 5.6.3 and 7.4.12**
 
+FOR LOCAL HOSTING
 After Setup, go to URL: "http://localhost/Formula1_CarRental"
 
 Remember: Do not change the project's folder name without updating the $config['base_url']
