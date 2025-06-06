@@ -76,7 +76,6 @@ $query_builder = TRUE;
 $db['default'] = array(
 	'dsn'	=> '',
 	'hostname' => 'formula1-carrental-ntc-7bab.f.aivencloud.com',
-	'port' => '13275',
 	'username' => 'avnadmin',
 	'password' => 'AVNS_0w8vvyWyzFsoZ0Pt6qx',
 	'database' => 'defaultdb',
