@@ -1,21 +1,19 @@
 FROM php:7.4-apache
 
-# Install required PHP extensions
+# Install mysqli extension
 RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
 
-# Enable Apache mod_rewrite for CodeIgniter
+# Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
-# Optional: update Apache default config for .htaccess
+# Copy Apache config (optional)
 COPY ./000-default.conf /etc/apache2/sites-available/000-default.conf
 
-# Copy your CodeIgniter app into container
+# Copy app files
 COPY . /var/www/html/
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
 
-# Expose port 80 to make it available externally
+# Expose port 80
 EXPOSE 80
-
-# Apache runs by default; no CMD needed
