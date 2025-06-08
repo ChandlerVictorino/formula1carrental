@@ -36,29 +36,20 @@ class Welcome extends CI_Controller {
                 'admin_username' => $username,
                 'admin_password' => md5($password)
             );
-          $data = $this->m_rental->edit_data($where, 'admin');
-$cek = $data->num_rows();
-
-if ($cek > 0) {
-    $d = $data->row();
-
-    // Check if expected properties exist
-    if (isset($d->admin_id) && isset($d->admin_nama)) {
-        $session = array(
-            'id' => $d->admin_id,
-            'nama' => $d->admin_nama,
-            'status' => 'login'
-        );
-        $this->session->set_userdata($session);
-        redirect(base_url().'admin');
-    } else {
-        // Fallback: data row is missing expected fields
-        redirect(base_url().'welcome?pesan=data_incomplete');
-    }
-} else {
-    redirect(base_url().'welcome?pesan=gagal');
-}
-
+            $data = $this->m_rental->edit_data($where,'admin');
+            $d = $this->m_rental->edit_data($where,'admin')->row();
+            $cek = $data->num_rows();
+            if($cek > 0){
+                $session = array(
+                    'id' => $d->admin_id,
+                    'nama' => $d->admin_nama,
+                    'status' => 'login'
+                );
+                $this->session->set_userdata($session);
+                redirect(base_url().'admin');
+            } else {
+                redirect(base_url().'welcome?pesan=gagal');
+            }
         } else {
             $this->load->view('login');
         }
