@@ -42,7 +42,7 @@ class Welcome extends CI_Controller {
             if($cek > 0){
                 $session = array(
                     'id' => $d->admin_id,
-                    'nama' => $d->admin_nama,
+                    'name' => $d->admin_name,
                     'status' => 'login'
                 );
                 $this->session->set_userdata($session);
