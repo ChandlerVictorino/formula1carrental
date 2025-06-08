@@ -1,9 +1,9 @@
 <?php
 
-$servername = "localhost";
-$uname = "root";
-$pass = "";
-$db = "rental_mobile";
+$servername = "sql12.freesqldatabase.com";
+$uname = "sql12783490";
+$pass = "vyXWKG9dEy";
+$db = "sql12783490";
 
 $conn = mysqli_connect($servername, $uname, $pass, $db);
 
