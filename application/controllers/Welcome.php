@@ -34,7 +34,7 @@ class Welcome extends CI_Controller {
         if($this->form_validation->run() != false){
             $where = array(
                 'admin_username' => $username,
-                'admin_password' => md5($password)
+                'admin_password' => password_hash($password)
             );
             $data = $this->m_rental->edit_data($where,'admin');
             $d = $this->m_rental->edit_data($where,'admin')->row();
