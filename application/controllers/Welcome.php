@@ -26,39 +26,32 @@ class Welcome extends CI_Controller {
         $this->load->view('login');
     }
     
-   function login(){
-    $username = $this->input->post('username');
-    $password = $this->input->post('password');
-
-    $this->form_validation->set_rules('username', 'Username', 'trim|required');
-    $this->form_validation->set_rules('password', 'Password', 'trim|required');
-
-    if($this->form_validation->run() != false){
-        // Find user by username
-        $where = array('admin_username' => $username);
-        $data = $this->m_rental->edit_data($where, 'admin');
-
-        if ($data->num_rows() > 0) {
-            $user = $data->row();
-
-            // Verify entered password with hashed password in DB
-            if (password_verify($password, $user->admin_password)) {
+    function login(){
+        $username = $this->input->post('username');
+        $password = $this->input->post('password');
+        $this->form_validation->set_rules('username','Username','trim|required');
+        $this->form_validation->set_rules('password','Password','trim|required');
+        if($this->form_validation->run() != false){
+            $where = array(
+                'admin_username' => $username,
+                'admin_password' => md5($password)
+            );
+            $data = $this->m_rental->edit_data($where,'admin');
+            $d = $this->m_rental->edit_data($where,'admin')->row();
+            $cek = $data->num_rows();
+            if($cek > 0){
                 $session = array(
-                    'id' => $user->admin_id,
-                    'name' => $user->admin_name,
+                    'id' => $d->admin_id,
+                    'name' => $d->admin_name,
                     'status' => 'login'
                 );
                 $this->session->set_userdata($session);
                 redirect(base_url().'admin');
             } else {
-                redirect(base_url().'welcome?pesan=gagal'); // Password incorrect
+                redirect(base_url().'welcome?pesan=gagal');
             }
         } else {
-            redirect(base_url().'welcome?pesan=gagal'); // Username not found
+            $this->load->view('login');
         }
-    } else {
-        $this->load->view('login');
     }
-}
-
 }
