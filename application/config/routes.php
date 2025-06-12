@@ -52,3 +52,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = 'welcome';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+
+$route['superadmin'] = 'superadmin/dashboard';
+$route['superadmin/create'] = 'superadmin/create_admin';
+$route['superadmin/store'] = 'superadmin/store_admin';
+$route['superadmin/edit/(:num)'] = 'superadmin/edit_admin/$1';
+$route['superadmin/update'] = 'superadmin/update_admin';
+$route['superadmin/delete/(:num)'] = 'superadmin/delete_admin/$1';
+
