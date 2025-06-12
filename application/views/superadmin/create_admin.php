@@ -10,7 +10,7 @@
 <body class="bg-light">
 <div class="container mt-5">
     <h2 class="mb-4">Create Admin</h2>
-    <form method="post" action="<?= base_url('superadmin/store') ?>">
+    <form method="post" action="<?php echo base_url('superadmin/store'); ?>">
         <div class="mb-3">
             <label for="admin_name" class="form-label">Name</label>
             <input type="text" class="form-control" id="admin_name" name="admin_name" required>
@@ -24,8 +24,9 @@
             <input type="password" class="form-control" id="admin_password" name="admin_password" required>
         </div>
         <button type="submit" class="btn btn-primary">Create Admin</button>
-        <a href="<?= base_url('superadmin/dashboard') ?>" class="btn btn-secondary">Cancel</a>
+        <a href="<?php echo base_url('superadmin/dashboard'); ?>" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
 </body>
 </html>
+
