@@ -69,4 +69,10 @@ class Welcome extends CI_Controller {
             $this->load->view('login');
         }
     }
+
+    // ✅ LOGOUT FUNCTION
+    public function logout(){
+        $this->session->sess_destroy();
+        redirect('welcome?pesan=logout');
+    }
 }
