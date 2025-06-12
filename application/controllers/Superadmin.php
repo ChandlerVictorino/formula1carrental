@@ -12,7 +12,7 @@ class Superadmin extends CI_Controller {
     }
 
     public function dashboard() {
-        $data['admins'] = $this->m_rental->get_all('admin');
+        $data['admins'] = $this->m_rental->get_data('admin')->result();
         $this->load->view('superadmin/dashboard', $data);
     }
 
@@ -40,7 +40,7 @@ class Superadmin extends CI_Controller {
         $id = $this->input->post('admin_id');
         $data = [
             'admin_name' => $this->input->post('admin_name'),
-            'admin_username' => $this->input->post('admin_username'),
+            'admin_username' => $this->input->post('admin_username')
         ];
         if ($this->input->post('admin_password')) {
             $data['admin_password'] = md5($this->input->post('admin_password'));
