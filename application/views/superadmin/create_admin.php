@@ -9,10 +9,10 @@
 </head>
 <body class="bg-light">
 <div class="container mt-5">
-    <h2 class="mb-4">Create Admin</h2>
+    <h2 class="mb-4">Create New Admin</h2>
     <form method="post" action="<?php echo base_url('superadmin/store'); ?>">
         <div class="mb-3">
-            <label for="admin_name" class="form-label">Name</label>
+            <label for="admin_name" class="form-label">Admin Name</label>
             <input type="text" class="form-control" id="admin_name" name="admin_name" required>
         </div>
         <div class="mb-3">
