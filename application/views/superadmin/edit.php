@@ -2,31 +2,32 @@
 // File: application/views/superadmin/edit.php
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Edit Admin</title>
-    <link rel="stylesheet" href="<?php echo base_url('assets/css/sb-admin-2.min.css'); ?>">
+  <meta charset="utf-8">
+  <title>Edit Admin</title>
+  <link href="<?php echo base_url('assets/css/sb-admin-2.min.css')?>" rel="stylesheet">
 </head>
-<body>
-    <div class="container mt-4">
-        <h2>Edit Admin</h2>
-        <form action="<?php echo base_url('superadmin/update/'.$admin->admin_id); ?>" method="post">
-            <div class="form-group">
-                <label>Username</label>
-                <input type="text" name="username" class="form-control" value="<?php echo $admin->admin_username; ?>" required>
-            </div>
-            <div class="form-group">
-                <label>Name</label>
-                <input type="text" name="name" class="form-control" value="<?php echo $admin->admin_name; ?>" required>
-            </div>
-            <div class="form-group">
-                <label>Password (leave blank to keep current)</label>
-                <input type="password" name="password" class="form-control">
-            </div>
-            <button type="submit" class="btn btn-primary">Update</button>
-            <a href="<?php echo base_url('superadmin'); ?>" class="btn btn-secondary">Back</a>
-        </form>
-    </div>
+<body class="bg-light">
+  <div class="container mt-5">
+    <h2>Edit Admin</h2>
+    <form method="post" action="<?= base_url('superadmin/update_admin')?>" class="mt-4">
+      <input type="hidden" name="admin_id" value="<?= $admin->admin_id ?>">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" name="admin_name" class="form-control" required value="<?= $admin->admin_name ?>">
+      </div>
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" name="admin_username" class="form-control" required value="<?= $admin->admin_username ?>">
+      </div>
+      <div class="form-group">
+        <label>New Password (leave blank to keep current)</label>
+        <input type="password" name="admin_password" class="form-control">
+      </div>
+      <button type="submit" class="btn btn-primary">Update Admin</button>
+      <a href="<?= base_url('superadmin')?>" class="btn btn-secondary">Cancel</a>
+    </form>
+  </div>
 </body>
 </html>
