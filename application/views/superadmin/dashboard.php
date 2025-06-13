@@ -1,9 +1,6 @@
-<?php if (\$this->session->flashdata('success')): ?>
-    <div class="alert alert-success"><?php echo \$this->session->flashdata('success'); ?></div>
-<?php endif; ?>
-<?php if (\$this->session->flashdata('error')): ?>
-    <div class="alert alert-danger"><?php echo \$this->session->flashdata('error'); ?></div>
-<?php endif; ?>
+<?php
+// File: application/views/superadmin/dashboard.php
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,28 +19,17 @@
             position: fixed;
             top: 0;
             left: 0;
-            background: linear-gradient(to bottom, #000000, #dc3545);
+            background-color: #dc3545;
             color: white;
             padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
         }
-        .sidebar .logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-        .sidebar .logo img {
-            width: 50px;
-            height: 20px;
+        .sidebar h4 {
+            margin-bottom: 30px;
         }
         .sidebar a.logout {
             color: white;
             text-decoration: none;
             font-weight: bold;
-            text-align: center;
         }
         .sidebar a.logout:hover {
             text-decoration: underline;
@@ -55,7 +41,6 @@
             background: white;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            min-height: 100vh;
         }
         .table th {
             background-color: #1c1f23;
@@ -82,30 +67,18 @@
         .btn-delete:hover {
             background-color: #bb2d3b;
         }
-        footer {
-            text-align: center;
-            margin-top: 20px;
-            padding: 20px 0;
-            color: #6c757d;
-            font-size: 0.9rem;
-        }
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <div class="logo">
-            <img src="<?php echo base_url('assets/img/f1logii.png'); ?>" alt="Logo">
-        </div>
-        <div>
-            <a href="<?php echo base_url('superadmin/change_info_view'); ?>" class="logout">Change Info</a><br>
-            <a href="<?php echo base_url('welcome/logout'); ?>" class="logout">Logout</a>
-        </div>
+        <h4>Super Admin</h4>
+        <a href="<?= base_url('welcome/logout') ?>" class="logout">Logout</a>
     </div>
 
     <div class="dashboard-container">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="fw-bold">Super Admin Dashboard</h2>
-            <a href="<?php echo base_url('superadmin/create_admin'); ?>" class="btn btn-create">+ Create Admin</a>
+            <a href="<?= base_url('superadmin/create_admin') ?>" class="btn btn-create">+ Create Admin</a>
         </div>
 
         <table class="table table-bordered">
@@ -114,7 +87,6 @@
                     <th>ID</th>
                     <th>Admin Name</th>
                     <th>Username</th>
-                    <th>Image</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -122,38 +94,26 @@
             <?php if (!empty($admins)) : ?>
                 <?php foreach ($admins as $admin) : ?>
                     <tr>
-                        <td><?php echo $admin->admin_id; ?></td>
-                        <td><?php echo $admin->admin_name; ?></td>
-                        <td><?php echo $admin->admin_username; ?></td>
+                        <td><?= $admin->admin_id ?></td>
+                        <td><?= $admin->admin_name ?></td>
+                        <td><?= $admin->admin_username ?></td>
                         <td>
-                            <?php if (!empty($admin->admin_image)) : ?>
-                                <img src="<?php echo base_url('uploads/admins/' . $admin->admin_image); ?>" width="50" height="50">
-                            <?php else : ?>
-                                No Image
-                            <?php endif; ?>
-                        </td>
-                        <td>
-                            <a href="<?php echo base_url('superadmin/edit_admin/' . $admin->admin_id); ?>" class="btn btn-edit btn-sm">Edit</a>
-                            <button class="btn btn-delete btn-sm" onclick="confirmDelete(<?php echo $admin->admin_id; ?>)">Delete</button>
+                            <a href="<?= base_url('superadmin/edit_admin/' . $admin->admin_id) ?>" class="btn btn-edit btn-sm">Edit</a>
+                            <button class="btn btn-delete btn-sm" onclick="confirmDelete(<?= $admin->admin_id ?>)">Delete</button>
                         </td>
                     </tr>
                 <?php endforeach; ?>
             <?php else : ?>
-                <tr><td colspan="5" class="text-center">No admin accounts found.</td></tr>
+                <tr><td colspan="4" class="text-center">No admin accounts found.</td></tr>
             <?php endif; ?>
             </tbody>
         </table>
-
-        <footer>
-            &copy; FORMULA1 2025 - Car Rental System
-        </footer>
     </div>
 
     <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog">
-        <form method="post" action="<?php echo base_url('superadmin/delete_confirmed'); ?>" id="deleteForm">
-            <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+        <form method="post" action="<?= base_url('superadmin/delete_confirmed') ?>" id="deleteForm">
             <div class="modal-content">
                 <div class="modal-header bg-danger text-white">
                     <h5 class="modal-title">Confirm Delete</h5>
@@ -161,7 +121,11 @@
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="admin_id" id="adminIdToDelete">
-                    <p class="text-danger">Are you sure you want to delete this admin? This action is irreversible.</p>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Enter your password to confirm:</label>
+                        <input type="password" class="form-control" name="superadmin_password" required>
+                    </div>
+                    <p class="text-danger">Warning: This action is irreversible.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-danger">Confirm Delete</button>
