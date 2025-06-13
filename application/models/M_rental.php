@@ -23,6 +23,15 @@ class M_rental extends CI_Model {
         $this->db->delete($table);
     }
 
+
+    public function check_login($username, $password) {
+    return $this->db
+        ->where('admin_username', $username)
+        ->where('admin_password', $password)
+        ->where('role', 'superadmin')
+        ->get('admin');  // use get('admin') if your table name is 'admin'
+}
+    
 public function delete_confirmed() {
     $admin_id = $this->input->post('admin_id');
     $entered_password = md5($this->input->post('superadmin_password'));
