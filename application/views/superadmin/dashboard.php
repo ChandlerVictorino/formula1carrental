@@ -91,7 +91,7 @@
 <body>
     <div class="sidebar">
         <div class="logo">
-            <img src="<?= base_url('assets/logo.png') ?>" alt="Logo">
+            <img src="<?= base_url('assets/img/f1logii.png') ?>" alt="Logo">
         </div>
         <div>
             <a href="<?= base_url('welcome/logout') ?>" class="logout">Logout</a>
