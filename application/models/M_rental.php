@@ -23,11 +23,21 @@ class M_rental extends CI_Model {
         $this->db->delete($table);
     }
 
-    // ✅ Add this method to fix the error in delete_confirmed()
-    public function check_login($username, $password) {
-        $this->db->where('admin_username', $username);
-        $this->db->where('admin_password', $password);
-        $this->db->where('role', 'superadmin'); // Only if you store role info
-        return $this->db->get('admin')->row(); // Returns null if not found
+public function delete_confirmed() {
+    $admin_id = $this->input->post('admin_id');
+    $entered_password = md5($this->input->post('superadmin_password'));
+
+    $username = $this->session->userdata('username');  // should be 'admin'
+
+    $superadmin = $this->m_rental->check_superadmin($username, $entered_password);
+
+    if ($superadmin->num_rows() > 0) {
+        $this->m_rental->delete_data(['admin_id' => $admin_id], 'admin');
+        $this->session->set_flashdata('success', 'Admin deleted successfully.');
+    } else {
+        $this->session->set_flashdata('error', 'Incorrect password. Deletion cancelled.');
     }
+
+    redirect('superadmin/dashboard');
+}
 }
