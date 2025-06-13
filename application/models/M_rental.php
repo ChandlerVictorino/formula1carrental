@@ -24,11 +24,12 @@ class M_rental extends CI_Model {
     }
 
     
-    public function check_superadmin($username, $password) {
+    public function check_login($username, $password) {
         return $this->db
             ->where('admin_username', $username)
             ->where('admin_password', $password)
-            ->get('admin'); // Your table name is 'admin'
+            ->where('role', 'superadmin') // optional if you want to strictly verify role
+            ->get('admin');
     }
     
 }
