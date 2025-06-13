@@ -23,7 +23,7 @@ class M_rental extends CI_Model {
         $this->db->delete($table);
     }
 
-public function check_login($username, $password) {
+public function check_superadmin($username, $password) {
     return $this->db
         ->where('superadmin_username', $username)
         ->where('superadmin_password', $password)
