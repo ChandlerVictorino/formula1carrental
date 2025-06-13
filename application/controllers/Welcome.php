@@ -49,17 +49,16 @@ class Welcome extends CI_Controller {
 }
 
 
-    private function set_session($id, $name, $role) {
-        // Regenerate session ID to prevent session fixation
-        $this->session->sess_regenerate(TRUE);
-        $session_data = [
-            'id' => $id,
-            'name' => $name,
-            'role' => $role,
-            'status' => 'login'
-        ];
-        $this->session->set_userdata($session_data);
-    }
+   private function set_session($id, $username, $role) {
+    $this->session->sess_regenerate(TRUE); // Prevent session fixation
+    $this->session->set_userdata([
+        'id' => $id,
+        'name' => $username,
+        'role' => $role,
+        'status' => 'login'
+    ]);
+}
+
 
     public function logout(){
         $this->session->sess_destroy();
