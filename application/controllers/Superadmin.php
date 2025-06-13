@@ -57,22 +57,29 @@ class Superadmin extends CI_Controller {
     }
 
     // Delete with password confirmation
-public function delete_confirmed() {
-    $admin_id = $this->input->post('admin_id');
-    $entered_password = md5($this->input->post('superadmin_password'));
-
-    $username = $this->session->userdata('username');
-
-    // ✅ Now calling the correct model method
-    $superadmin = $this->m_rental->check_superadmin($username, $entered_password);
-
-    if ($superadmin->num_rows() > 0) {
-        $this->m_rental->delete_data(['admin_id' => $admin_id], 'admin');
-        $this->session->set_flashdata('success', 'Admin deleted successfully.');
-    } else {
-        $this->session->set_flashdata('error', 'Incorrect password. Deletion cancelled.');
+   public function dashboard() {
+        $data['admins'] = $this->m_rental->get_data('admin')->result();
+        $this->load->view('superadmin/dashboard', $data);
     }
 
-    redirect('superadmin/dashboard');
+    public function delete_confirmed() {
+        $admin_id = $this->input->post('admin_id');
+        $entered_password = md5($this->input->post('superadmin_password'));
+
+        $username = $this->session->userdata('username');
+
+        // Make sure check_login() exists in M_rental
+        $superadmin = $this->m_rental->check_login($username, $entered_password);
+
+        if ($superadmin->num_rows() > 0) {
+            $this->m_rental->delete_data(['admin_id' => $admin_id], 'admin');
+            $this->session->set_flashdata('success', 'Admin deleted successfully.');
+        } else {
+            $this->session->set_flashdata('error', 'Incorrect password. Deletion cancelled.');
+        }
+
+        redirect('superadmin/dashboard');
+    }
+
 }
-}
+
