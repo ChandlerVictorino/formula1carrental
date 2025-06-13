@@ -24,22 +24,11 @@ class M_rental extends CI_Model {
     }
 
     
-public function delete_confirmed() {
-    $admin_id = $this->input->post('admin_id');
-    $entered_password = md5($this->input->post('superadmin_password'));
-
-    $username = $this->session->userdata('username');  // should be 'admin'
-
-    $superadmin = $this->m_rental->check_superadmin($username, $entered_password);
-
-    if ($superadmin->num_rows() > 0) {
-        $this->m_rental->delete_data(['admin_id' => $admin_id], 'admin');
-        $this->session->set_flashdata('success', 'Admin deleted successfully.');
-    } else {
-        $this->session->set_flashdata('error', 'Incorrect password. Deletion cancelled.');
+    public function check_superadmin($username, $password) {
+        return $this->db
+            ->where('admin_username', $username)
+            ->where('admin_password', $password)
+            ->get('admin'); // Your table name is 'admin'
     }
-
-    redirect('superadmin/dashboard');
-}
     
 }
