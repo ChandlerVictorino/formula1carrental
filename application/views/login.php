@@ -1,87 +1,41 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-
-$CI =& get_instance();
-if ($CI->session->userdata('status') === 'login') {
-    $role = $CI->session->userdata('role');
-    if ($role === 'superadmin') {
-        redirect('superadmin/dashboard');
-    } elseif ($role === 'admin') {
-        redirect('admin/dashboard');
-    }
-}
-?>
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <title>Rental > Login</title>
-    <!-- Bootstrap core CSS -->
-    <link href="<?php echo base_url().'assets/css/sb-admin-2.min.css'; ?>" rel="stylesheet">
-    <link href="<?php echo base_url().'assets/vendor/fontawesome-free/css/all.min.css'; ?>" rel="stylesheet" type="text/css">
-
-    <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        user-select: none;
-      }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-    </style>
-    <!-- Custom styles for this template -->
-    <link href="<?php echo base_url().'assets/css/signin1.css'; ?>" rel="stylesheet">
-  </head>
-  <body class="text-center">
-  <form class="form-signin" method="post" action="<?php echo base_url().'welcome/login'; ?>">
-    <div>
-      <img src="assets/img/Formula1.png" alt="">
-    </div>
-    <h1 class="h3 mb-3 font-weight-bold">Formula 1</h1>
-    <h3 class="h3 mb-3 font-weight-normal">Car Rental System</h3>
-
-    <?php
-      if(isset($_GET['pesan'])){
-          if($_GET['pesan'] == "gagal"){
-              echo '<div class="alert alert-danger text-left" role="alert"><strong>Login Failed!</strong><br>Invalid Details</div>';
-          } else if($_GET['pesan'] == "logout"){
-              echo '<div class="alert alert-success text-left" role="alert">Logged Out!</div>';
-          } else if($_GET['pesan'] == "belumlogin"){
-              echo '<div class="alert alert-warning text-left" role="alert">Please login to continue</div>';
-          }
-      }
-    ?>
-
-    <?php if (isset($error)) : ?>
-      <div class="alert alert-danger text-left" role="alert"><?php echo $error; ?></div>
+<head>
+  <!-- head meta/css here -->
+</head>
+<body class="text-center">
+<form method="post" action="<?= base_url('welcome/login') ?>">
+  <!-- logo/heading -->
+  
+  <!-- GET messages -->
+  <?php if (isset($_GET['pesan'])): ?>
+    <?php if ($_GET['pesan']=='gagal'): ?>
+      <div class="alert alert-danger">Login failed: invalid details.</div>
+    <?php elseif ($_GET['pesan']=='logout'): ?>
+      <div class="alert alert-success">Logged out successfully.</div>
     <?php endif; ?>
+  <?php endif; ?>
 
-    <label for="inputUname" class="sr-only">Username</label>
-    <input type="text" name="username" id="inputUname" class="form-control" placeholder="Username" required>
-    <?php echo form_error('username'); ?>
+  <!-- validation errors -->
+  <?= validation_errors('<div class="alert alert-danger">','</div>') ?>
 
-    <label for="inputPassword" class="sr-only">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
-    <?php echo form_error('password'); ?>
+  <?php if (isset($error)): ?>
+    <div class="alert alert-danger"><?= $error ?></div>
+  <?php endif; ?>
 
-    <!-- New Dropdown for Role Selection -->
-    <label for="user_type" class="sr-only">User Type</label>
-    <select name="user_type" id="user_type" class="form-control mb-3" required>
-      <option value="" disabled selected>Select Role</option>
-      <option value="admin">Admin</option>
-      <option value="superadmin">Super Admin</option>
-    </select>
-    <?php echo form_error('user_type'); ?>
+  <!-- form inputs -->
+  <input name="username" placeholder="Username" required>
+  <input type="password" name="password" placeholder="Password" required>
 
-    <button class="btn btn-lg btn-danger btn-block" type="submit">Login</button>
-    <p class="mt-5 mb-3 text-muted">&copy; <?php echo date("Y"); ?> Formula One</p>
-  </form>
-  </body>
+  <select name="user_type" required>
+    <option disabled selected>Select Role</option>
+    <option value="admin">Admin</option>
+    <option value="superadmin">Super Admin</option>
+  </select>
+
+  <button type="submit">Login</button>
+</form>
+</body>
 </html>
