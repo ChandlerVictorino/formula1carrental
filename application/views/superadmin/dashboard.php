@@ -19,7 +19,7 @@
             position: fixed;
             top: 0;
             left: 0;
-            background-color: background: linear-gradient(to bottom, #000000, #dc3545);
+            background: linear-gradient(to bottom, #000000, #dc3545);
             color: white;
             padding: 20px;
         }
