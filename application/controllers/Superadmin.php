@@ -56,19 +56,12 @@ class Superadmin extends CI_Controller {
         redirect('superadmin/dashboard');
     }
 
-    // Delete with password confirmation
-   public function dashboard() {
-        $data['admins'] = $this->m_rental->get_data('admin')->result();
-        $this->load->view('superadmin/dashboard', $data);
-    }
-
     public function delete_confirmed() {
         $admin_id = $this->input->post('admin_id');
         $entered_password = md5($this->input->post('superadmin_password'));
 
         $username = $this->session->userdata('username');
 
-        // Make sure check_login() exists in M_rental
         $superadmin = $this->m_rental->check_login($username, $entered_password);
 
         if ($superadmin->num_rows() > 0) {
@@ -82,4 +75,3 @@ class Superadmin extends CI_Controller {
     }
 
 }
-
