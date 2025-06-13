@@ -59,6 +59,10 @@ if ($CI->session->userdata('status') === 'login') {
       }
     ?>
 
+    <?php if (isset($error)) : ?>
+      <div class="alert alert-danger text-left" role="alert"><?php echo $error; ?></div>
+    <?php endif; ?>
+
     <label for="inputUname" class="sr-only">Username</label>
     <input type="text" name="username" id="inputUname" class="form-control" placeholder="Username" required>
     <?php echo form_error('username'); ?>
