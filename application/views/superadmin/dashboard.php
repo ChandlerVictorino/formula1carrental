@@ -13,11 +13,32 @@
             background-color: #f8f9fa;
             font-family: 'Segoe UI', sans-serif;
         }
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #dc3545;
+            color: white;
+            padding: 20px;
+        }
+        .sidebar h4 {
+            margin-bottom: 30px;
+        }
+        .sidebar a.logout {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .sidebar a.logout:hover {
+            text-decoration: underline;
+        }
         .dashboard-container {
-            max-width: 1100px;
-            margin: 40px auto;
+            margin-left: 270px;
+            max-width: calc(100% - 270px);
+            padding: 40px;
             background: white;
-            padding: 30px;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         }
@@ -49,6 +70,11 @@
     </style>
 </head>
 <body>
+    <div class="sidebar">
+        <h4>Super Admin</h4>
+        <a href="<?= base_url('welcome/logout') ?>" class="logout">Logout</a>
+    </div>
+
     <div class="dashboard-container">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="fw-bold">Super Admin Dashboard</h2>
