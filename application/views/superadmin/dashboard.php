@@ -22,9 +22,16 @@
             background: linear-gradient(to bottom, #000000, #dc3545);
             color: white;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
-        .sidebar h4 {
-            margin-bottom: 30px;
+        .sidebar .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
         }
         .sidebar a.logout {
             color: white;
@@ -41,6 +48,7 @@
             background: white;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            min-height: 100vh;
         }
         .table th {
             background-color: #1c1f23;
@@ -67,12 +75,24 @@
         .btn-delete:hover {
             background-color: #bb2d3b;
         }
+        .sidebar-footer {
+            font-size: 0.85rem;
+            color: #f1f1f1;
+        }
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <h4>Super Admin</h4>
-        <a href="<?= base_url('welcome/logout') ?>" class="logout">Logout</a>
+        <div class="logo">
+            <img src="<?= base_url('assets/logo.png') ?>" alt="Logo" style="width: 40px; height: 40px;">
+            <span>Super Admin</span>
+        </div>
+        <div>
+            <a href="<?= base_url('welcome/logout') ?>" class="logout">Logout</a>
+        </div>
+        <div class="sidebar-footer text-center">
+            &copy; FORMULA1 2025 - Car Rental System
+        </div>
     </div>
 
     <div class="dashboard-container">
@@ -145,3 +165,4 @@
     </script>
 </body>
 </html>
+
