@@ -1,3 +1,13 @@
+CREATE TABLE `superadmin` (
+  `superadmin_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `superadmin_username` VARCHAR(50) NOT NULL,
+  `superadmin_password` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`superadmin_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `superadmin` (`superadmin_username`, `superadmin_password`) 
+VALUES ('superadmin', MD5('password123'));
+
 -- Table structure for table `admin`
 CREATE TABLE `admin` (
   `admin_id` int(11) NOT NULL AUTO_INCREMENT,
