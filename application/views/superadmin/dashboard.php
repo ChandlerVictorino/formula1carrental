@@ -1,8 +1,8 @@
-<?php if ($this->session->flashdata('success')): ?>
-    <div class="alert alert-success"><?= $this->session->flashdata('success') ?></div>
+<?php if (\$this->session->flashdata('success')): ?>
+    <div class="alert alert-success"><?= \$this->session->flashdata('success') ?></div>
 <?php endif; ?>
-<?php if ($this->session->flashdata('error')): ?>
-    <div class="alert alert-danger"><?= $this->session->flashdata('error') ?></div>
+<?php if (\$this->session->flashdata('error')): ?>
+    <div class="alert alert-danger"><?= \$this->session->flashdata('error') ?></div>
 <?php endif; ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -97,6 +97,7 @@
             <img src="<?= base_url('assets/img/f1logii.png') ?>" alt="Logo">
         </div>
         <div>
+            <a href="<?= base_url('superadmin/change_info_view') ?>" class="logout">Change Info</a><br>
             <a href="<?= base_url('welcome/logout') ?>" class="logout">Logout</a>
         </div>
     </div>
@@ -113,24 +114,32 @@
                     <th>ID</th>
                     <th>Admin Name</th>
                     <th>Username</th>
+                    <th>Image</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-            <?php if (!empty($admins)) : ?>
-                <?php foreach ($admins as $admin) : ?>
+            <?php if (!empty(\$admins)) : ?>
+                <?php foreach (\$admins as \$admin) : ?>
                     <tr>
-                        <td><?= $admin->admin_id ?></td>
-                        <td><?= $admin->admin_name ?></td>
-                        <td><?= $admin->admin_username ?></td>
+                        <td><?= \$admin->admin_id ?></td>
+                        <td><?= \$admin->admin_name ?></td>
+                        <td><?= \$admin->admin_username ?></td>
                         <td>
-                            <a href="<?= base_url('superadmin/edit_admin/' . $admin->admin_id) ?>" class="btn btn-edit btn-sm">Edit</a>
-                            <button class="btn btn-delete btn-sm" onclick="confirmDelete(<?= $admin->admin_id ?>)">Delete</button>
+                            <?php if (!empty(\$admin->admin_image)) : ?>
+                                <img src="<?= base_url('uploads/admins/' . \$admin->admin_image) ?>" width="50" height="50">
+                            <?php else : ?>
+                                No Image
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <a href="<?= base_url('superadmin/edit_admin/' . \$admin->admin_id) ?>" class="btn btn-edit btn-sm">Edit</a>
+                            <button class="btn btn-delete btn-sm" onclick="confirmDelete(<?= \$admin->admin_id ?>)">Delete</button>
                         </td>
                     </tr>
                 <?php endforeach; ?>
             <?php else : ?>
-                <tr><td colspan="4" class="text-center">No admin accounts found.</td></tr>
+                <tr><td colspan="5" class="text-center">No admin accounts found.</td></tr>
             <?php endif; ?>
             </tbody>
         </table>
@@ -144,6 +153,7 @@
     <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog">
         <form method="post" action="<?= base_url('superadmin/delete_confirmed') ?>" id="deleteForm">
+            <?= csrf_field() ?>
             <div class="modal-content">
                 <div class="modal-header bg-danger text-white">
                     <h5 class="modal-title">Confirm Delete</h5>
@@ -175,5 +185,3 @@
     </script>
 </body>
 </html>
-
-
