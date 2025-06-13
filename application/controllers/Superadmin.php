@@ -96,4 +96,27 @@ class Superadmin extends CI_Controller {
 
         redirect('superadmin/change_password_view');
     }
+
+    public function login_action()
+{
+    $username = $this->input->post('username');
+    $password = md5($this->input->post('password'));
+
+    $superadmin = $this->m_rental->check_superadmin($username, $password);
+
+    if ($superadmin->num_rows() > 0) {
+        $row = $superadmin->row();
+
+        $this->session->set_userdata([
+            'username' => $row->superadmin_username,
+            'superadmin_id' => $row->superadmin_id,
+            'role' => 'superadmin'
+        ]);
+
+        redirect('superadmin/dashboard');
+    } else {
+        $this->session->set_flashdata('error', 'Invalid login credentials.');
+        redirect('welcome');
+    }
 }
+
