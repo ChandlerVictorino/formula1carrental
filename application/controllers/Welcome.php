@@ -23,13 +23,15 @@ class Welcome extends CI_Controller {
         $this->form_validation->set_rules('user_type', 'User Type', 'required');
 
         if($this->form_validation->run() != false){
-            
-            // Super Admin Login
+
+            // Super Admin Login (from database)
             if ($user_type === 'superadmin') {
-                if ($username === 'superadmin' && $password === 'password123') {
+                $superadmin = $this->m_rental->check_superadmin($username, md5($password));
+                if ($superadmin->num_rows() > 0) {
+                    $row = $superadmin->row();
                     $session = array(
-                        'id' => 0,
-                        'name' => 'Super Admin',
+                        'id' => $row->superadmin_id,
+                        'name' => $row->superadmin_username,
                         'role' => 'superadmin',
                         'status' => 'login'
                     );
@@ -48,7 +50,7 @@ class Welcome extends CI_Controller {
                 $data = $this->m_rental->edit_data($where, 'admin');
                 $d = $data->row();
                 $cek = $data->num_rows();
-                
+
                 if($cek > 0){
                     $session = array(
                         'id' => $d->admin_id,
@@ -76,3 +78,4 @@ class Welcome extends CI_Controller {
         redirect('welcome?pesan=logout');
     }
 }
+
