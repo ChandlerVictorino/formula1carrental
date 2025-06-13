@@ -7,6 +7,7 @@ class Welcome extends CI_Controller {
         parent::__construct();
         $this->load->model('m_rental');
         $this->load->library(['form_validation', 'session']);
+        $this->load->helper(['url', 'form', 'security']);
     }
 
     public function index(){
@@ -14,21 +15,20 @@ class Welcome extends CI_Controller {
     }
 
     public function login(){
-        // Set form validation rules
-        $this->form_validation->set_rules('username', 'Username', 'trim|required|xss_clean');
-        $this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean');
+        // Updated validation rules (no xss_clean here)
+        $this->form_validation->set_rules('username', 'Username', 'trim|required');
+        $this->form_validation->set_rules('password', 'Password', 'trim|required');
         $this->form_validation->set_rules('user_type', 'User Type', 'required|in_list[superadmin,admin]');
 
         if ($this->form_validation->run() == FALSE) {
-            // Validation failed - reload login with errors
             $this->load->view('login');
             return;
         }
 
-        // Get sanitized inputs
-        $username = $this->input->post('username', TRUE);
-        $password = $this->input->post('password', TRUE);
-        $user_type = $this->input->post('user_type', TRUE);
+        // Manually sanitize input data using xss_clean
+        $username  = $this->security->xss_clean($this->input->post('username', TRUE));
+        $password  = $this->security->xss_clean($this->input->post('password', TRUE));
+        $user_type = $this->security->xss_clean($this->input->post('user_type', TRUE));
 
         if ($user_type === 'superadmin') {
             $superadmin = $this->m_rental->get_superadmin_by_username($username);
@@ -55,7 +55,7 @@ class Welcome extends CI_Controller {
     }
 
     private function set_session($id, $name, $role) {
-        // Regenerate session ID to prevent fixation attacks
+        // Regenerate session ID to prevent session fixation
         $this->session->sess_regenerate(TRUE);
         $session_data = [
             'id' => $id,
@@ -71,5 +71,3 @@ class Welcome extends CI_Controller {
         redirect('welcome?pesan=logout');
     }
 }
-
-
