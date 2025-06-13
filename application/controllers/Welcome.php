@@ -2,67 +2,58 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Welcome extends CI_Controller {
-
-    public function __construct(){
+    public function __construct() {
         parent::__construct();
         $this->load->model('m_rental');
-        $this->load->library(['form_validation', 'session']);
         $this->load->helper(['url', 'form', 'security']);
+        $this->load->library(['form_validation', 'session']);
     }
 
-    public function index(){
-        // Redirect if already logged in
+    public function index() {
+        // If already logged in, redirect
         if ($this->session->userdata('status') === 'login') {
             $role = $this->session->userdata('role');
-            if ($role === 'superadmin') {
-                redirect('superadmin/dashboard');
-            } elseif ($role === 'admin') {
-                redirect('admin/dashboard');
-            }
+            redirect($role === 'superadmin' ? 'superadmin/dashboard' : 'admin/dashboard');
         }
-
         $this->load->view('login');
     }
 
     public function login() {
-        $this->form_validation->set_rules('username', 'Username', 'trim|required');
-        $this->form_validation->set_rules('password', 'Password', 'trim|required');
-        $this->form_validation->set_rules('user_type', 'User Type', 'required|in_list[superadmin,admin]');
+        $this->form_validation->set_rules('username','Username','trim|required');
+        $this->form_validation->set_rules('password','Password','trim|required');
+        $this->form_validation->set_rules('user_type','User Type','required|in_list[superadmin,admin]');
 
-        if ($this->form_validation->run() == FALSE) {
-            $this->load->view('login');
-            return;
+        if ($this->form_validation->run() === FALSE) {
+            return $this->load->view('login');
         }
 
-        $username = $this->input->post('username', TRUE);
-        $password = $this->input->post('password', TRUE);
-        $user_type = $this->input->post('user_type', TRUE);
+        $u = $this->input->post('username', TRUE);
+        $p = $this->input->post('password', TRUE);
+        $t = $this->input->post('user_type', TRUE);
 
-        if ($user_type === 'superadmin') {
-            $superadmin = $this->m_rental->get_superadmin_by_username($username);
-            if ($superadmin && password_verify($password, $superadmin->superadmin_password)) {
-                $this->set_session($superadmin->superadmin_id, $superadmin->superadmin_username, 'superadmin');
-                redirect('superadmin/dashboard');
-                return;
+        if ($t === 'superadmin') {
+            $sa = $this->m_rental->get_superadmin_by_username($u);
+            if ($sa && password_verify($p, $sa->superadmin_password)) {
+                $this->set_session($sa->superadmin_id, $sa->superadmin_username, 'superadmin');
+                return redirect('superadmin/dashboard');
             }
-        } else if ($user_type === 'admin') {
-            $admin = $this->m_rental->get_admin_by_username($username);
-            if ($admin && password_verify($password, $admin->admin_password)) {
-                $this->set_session($admin->admin_id, $admin->admin_username, 'admin');
-                redirect('admin/dashboard');
-                return;
+        } else {
+            $ad = $this->m_rental->get_admin_by_username($u);
+            if ($ad && password_verify($p, $ad->admin_password)) {
+                $this->set_session($ad->admin_id, $ad->admin_username, 'admin');
+                return redirect('admin/dashboard');
             }
         }
 
         $data['error'] = 'Invalid username or password.';
-        $this->load->view('login', $data);
+        return $this->load->view('login', $data);
     }
 
-    private function set_session($id, $username, $role) {
+    private function set_session($id, $name, $role) {
         $this->session->sess_regenerate(TRUE);
         $this->session->set_userdata([
             'id' => $id,
-            'name' => $username,
+            'name' => $name,
             'role' => $role,
             'status' => 'login'
         ]);
