@@ -56,20 +56,15 @@ class Superadmin extends CI_Controller {
         redirect('superadmin/dashboard');
     }
 
+    // ✅ Simplified deletion - just confirms, no password required
     public function delete_confirmed() {
         $admin_id = $this->input->post('admin_id');
-        $entered_password = md5($this->input->post('superadmin_password'));
 
-        $username = $this->session->userdata('username');
-
-        // Use the correct method from model
-        $superadmin = $this->m_rental->check_superadmin($username, $entered_password);
-
-        if ($superadmin->num_rows() > 0) {
+        if ($admin_id) {
             $this->m_rental->delete_data(['admin_id' => $admin_id], 'admin');
             $this->session->set_flashdata('success', 'Admin deleted successfully.');
         } else {
-            $this->session->set_flashdata('error', 'Incorrect password. Deletion cancelled.');
+            $this->session->set_flashdata('error', 'Invalid admin ID.');
         }
 
         redirect('superadmin/dashboard');
@@ -97,5 +92,25 @@ class Superadmin extends CI_Controller {
         redirect('superadmin/change_password_view');
     }
 
-}
+    public function login_action() {
+        $username = $this->input->post('username');
+        $password = md5($this->input->post('password'));
 
+        $superadmin = $this->m_rental->check_superadmin($username, $password);
+
+        if ($superadmin->num_rows() > 0) {
+            $row = $superadmin->row();
+
+            $this->session->set_userdata([
+                'username' => $row->superadmin_username,
+                'superadmin_id' => $row->superadmin_id,
+                'role' => 'superadmin'
+            ]);
+
+            redirect('superadmin/dashboard');
+        } else {
+            $this->session->set_flashdata('error', 'Invalid login credentials.');
+            redirect('welcome');
+        }
+    }
+}
