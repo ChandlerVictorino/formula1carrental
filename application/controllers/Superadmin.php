@@ -6,8 +6,9 @@ class Superadmin extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('m_rental');
+        $this->load->library(['form_validation', 'upload']);
+        $this->load->helper('security');
 
-        // Redirect non-superadmins
         if ($this->session->userdata('role') !== 'superadmin') {
             redirect('welcome');
         }
@@ -15,6 +16,7 @@ class Superadmin extends CI_Controller {
 
     public function dashboard() {
         $data['admins'] = $this->m_rental->get_data('admin')->result();
+        $data['superadmin_name'] = $this->session->userdata('name');
         $this->load->view('superadmin/dashboard', $data);
     }
 
@@ -23,10 +25,23 @@ class Superadmin extends CI_Controller {
     }
 
     public function store_admin() {
+        $config['upload_path'] = './uploads/admins/';
+        $config['allowed_types'] = 'jpg|jpeg|png';
+        $config['max_size'] = 2048;
+        $this->upload->initialize($config);
+
+        if (!$this->upload->do_upload('admin_image')) {
+            $image_name = null;
+        } else {
+            $image_data = $this->upload->data();
+            $image_name = $image_data['file_name'];
+        }
+
         $data = array(
-            'admin_name' => $this->input->post('admin_name'),
-            'admin_username' => $this->input->post('admin_username'),
-            'admin_password' => md5($this->input->post('admin_password'))
+            'admin_name' => $this->input->post('admin_name', TRUE),
+            'admin_username' => $this->input->post('admin_username', TRUE),
+            'admin_password' => md5($this->input->post('admin_password', TRUE)),
+            'admin_image' => $image_name
         );
 
         $this->m_rental->insert_data($data, 'admin');
@@ -41,14 +56,25 @@ class Superadmin extends CI_Controller {
 
     public function update_admin() {
         $admin_id = $this->input->post('admin_id');
-
         $update_data = array(
-            'admin_name' => $this->input->post('admin_name'),
-            'admin_username' => $this->input->post('admin_username')
+            'admin_name' => $this->input->post('admin_name', TRUE),
+            'admin_username' => $this->input->post('admin_username', TRUE)
         );
 
         if (!empty($this->input->post('admin_password'))) {
-            $update_data['admin_password'] = md5($this->input->post('admin_password'));
+            $update_data['admin_password'] = md5($this->input->post('admin_password', TRUE));
+        }
+
+        if (!empty($_FILES['admin_image']['name'])) {
+            $config['upload_path'] = './uploads/admins/';
+            $config['allowed_types'] = 'jpg|jpeg|png';
+            $config['max_size'] = 2048;
+            $this->upload->initialize($config);
+
+            if ($this->upload->do_upload('admin_image')) {
+                $image_data = $this->upload->data();
+                $update_data['admin_image'] = $image_data['file_name'];
+            }
         }
 
         $where = array('admin_id' => $admin_id);
@@ -56,61 +82,27 @@ class Superadmin extends CI_Controller {
         redirect('superadmin/dashboard');
     }
 
-    // ✅ Simplified deletion - just confirms, no password required
-    public function delete_confirmed() {
-        $admin_id = $this->input->post('admin_id');
-
-        if ($admin_id) {
-            $this->m_rental->delete_data(['admin_id' => $admin_id], 'admin');
-            $this->session->set_flashdata('success', 'Admin deleted successfully.');
-        } else {
-            $this->session->set_flashdata('error', 'Invalid admin ID.');
-        }
-
+    public function delete_admin($id) {
+        $this->m_rental->delete_data(['admin_id' => $id], 'admin');
+        $this->session->set_flashdata('success', 'Admin deleted successfully.');
         redirect('superadmin/dashboard');
     }
 
-    public function change_password_view() {
-        $this->load->view('superadmin/change_password');
+    public function change_info_view() {
+        $this->load->view('superadmin/change_info');
     }
 
-    public function change_password() {
-        $superadmin_id = $this->session->userdata('superadmin_id');
-        $old_password = md5($this->input->post('old_password'));
-        $new_password = $this->input->post('new_password');
+    public function update_superadmin_info() {
+        $name = $this->input->post('name', TRUE);
+        $new_password = $this->input->post('new_password', TRUE);
 
-        $username = $this->session->userdata('username');
-        $superadmin = $this->m_rental->check_superadmin($username, $old_password);
+        $this->session->set_userdata('name', $name);
 
-        if ($superadmin->num_rows() > 0) {
-            $this->m_rental->update_superadmin_password($superadmin_id, $new_password);
-            $this->session->set_flashdata('success', 'Password updated successfully.');
-        } else {
-            $this->session->set_flashdata('error', 'Incorrect current password.');
+        if (!empty($new_password)) {
+            $this->m_rental->update_superadmin_password(0, $new_password);
         }
 
-        redirect('superadmin/change_password_view');
-    }
-
-    public function login_action() {
-        $username = $this->input->post('username');
-        $password = md5($this->input->post('password'));
-
-        $superadmin = $this->m_rental->check_superadmin($username, $password);
-
-        if ($superadmin->num_rows() > 0) {
-            $row = $superadmin->row();
-
-            $this->session->set_userdata([
-                'username' => $row->superadmin_username,
-                'superadmin_id' => $row->superadmin_id,
-                'role' => 'superadmin'
-            ]);
-
-            redirect('superadmin/dashboard');
-        } else {
-            $this->session->set_flashdata('error', 'Invalid login credentials.');
-            redirect('welcome');
-        }
+        $this->session->set_flashdata('success', 'Super Admin info updated.');
+        redirect('superadmin/change_info_view');
     }
 }
