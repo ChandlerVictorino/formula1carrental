@@ -10,8 +10,7 @@ if ($this->session->userdata('status') === 'login') {
         redirect('admin/dashboard');
     }
 }
-
-
+?>
 <!doctype html>
 <html lang="en">
   <head>
