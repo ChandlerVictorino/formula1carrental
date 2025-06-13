@@ -1,8 +1,8 @@
 <?php if (\$this->session->flashdata('success')): ?>
-    <div class="alert alert-success"><?= \$this->session->flashdata('success') ?></div>
+    <div class="alert alert-success"><?php echo \$this->session->flashdata('success'); ?></div>
 <?php endif; ?>
 <?php if (\$this->session->flashdata('error')): ?>
-    <div class="alert alert-danger"><?= \$this->session->flashdata('error') ?></div>
+    <div class="alert alert-danger"><?php echo \$this->session->flashdata('error'); ?></div>
 <?php endif; ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -94,18 +94,18 @@
 <body>
     <div class="sidebar">
         <div class="logo">
-            <img src="<?= base_url('assets/img/f1logii.png') ?>" alt="Logo">
+            <img src="<?php echo base_url('assets/img/f1logii.png'); ?>" alt="Logo">
         </div>
         <div>
-            <a href="<?= base_url('superadmin/change_info_view') ?>" class="logout">Change Info</a><br>
-            <a href="<?= base_url('welcome/logout') ?>" class="logout">Logout</a>
+            <a href="<?php echo base_url('superadmin/change_info_view'); ?>" class="logout">Change Info</a><br>
+            <a href="<?php echo base_url('welcome/logout'); ?>" class="logout">Logout</a>
         </div>
     </div>
 
     <div class="dashboard-container">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="fw-bold">Super Admin Dashboard</h2>
-            <a href="<?= base_url('superadmin/create_admin') ?>" class="btn btn-create">+ Create Admin</a>
+            <a href="<?php echo base_url('superadmin/create_admin'); ?>" class="btn btn-create">+ Create Admin</a>
         </div>
 
         <table class="table table-bordered">
@@ -119,22 +119,22 @@
                 </tr>
             </thead>
             <tbody>
-            <?php if (!empty(\$admins)) : ?>
-                <?php foreach (\$admins as \$admin) : ?>
+            <?php if (!empty($admins)) : ?>
+                <?php foreach ($admins as $admin) : ?>
                     <tr>
-                        <td><?= \$admin->admin_id ?></td>
-                        <td><?= \$admin->admin_name ?></td>
-                        <td><?= \$admin->admin_username ?></td>
+                        <td><?php echo $admin->admin_id; ?></td>
+                        <td><?php echo $admin->admin_name; ?></td>
+                        <td><?php echo $admin->admin_username; ?></td>
                         <td>
-                            <?php if (!empty(\$admin->admin_image)) : ?>
-                                <img src="<?= base_url('uploads/admins/' . \$admin->admin_image) ?>" width="50" height="50">
+                            <?php if (!empty($admin->admin_image)) : ?>
+                                <img src="<?php echo base_url('uploads/admins/' . $admin->admin_image); ?>" width="50" height="50">
                             <?php else : ?>
                                 No Image
                             <?php endif; ?>
                         </td>
                         <td>
-                            <a href="<?= base_url('superadmin/edit_admin/' . \$admin->admin_id) ?>" class="btn btn-edit btn-sm">Edit</a>
-                            <button class="btn btn-delete btn-sm" onclick="confirmDelete(<?= \$admin->admin_id ?>)">Delete</button>
+                            <a href="<?php echo base_url('superadmin/edit_admin/' . $admin->admin_id); ?>" class="btn btn-edit btn-sm">Edit</a>
+                            <button class="btn btn-delete btn-sm" onclick="confirmDelete(<?php echo $admin->admin_id; ?>)">Delete</button>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -152,8 +152,8 @@
     <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog">
-        <form method="post" action="<?= base_url('superadmin/delete_confirmed') ?>" id="deleteForm">
-            <?= csrf_field() ?>
+        <form method="post" action="<?php echo base_url('superadmin/delete_confirmed'); ?>" id="deleteForm">
+            <?php echo csrf_field(); ?>
             <div class="modal-content">
                 <div class="modal-header bg-danger text-white">
                     <h5 class="modal-title">Confirm Delete</h5>
