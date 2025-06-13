@@ -29,14 +29,18 @@
         .sidebar .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 1.5rem;
-            font-weight: bold;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .sidebar .logo img {
+            width: 60px;
+            height: 60px;
         }
         .sidebar a.logout {
             color: white;
             text-decoration: none;
             font-weight: bold;
+            text-align: center;
         }
         .sidebar a.logout:hover {
             text-decoration: underline;
@@ -75,23 +79,22 @@
         .btn-delete:hover {
             background-color: #bb2d3b;
         }
-        .sidebar-footer {
-            font-size: 0.85rem;
-            color: #f1f1f1;
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px 0;
+            color: #6c757d;
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <div class="logo">
-            <img src="<?= base_url('assets/logo.png') ?>" alt="Logo" style="width: 40px; height: 40px;">
-            <span>Super Admin</span>
+            <img src="<?= base_url('assets/logo.png') ?>" alt="Logo">
         </div>
         <div>
             <a href="<?= base_url('welcome/logout') ?>" class="logout">Logout</a>
-        </div>
-        <div class="sidebar-footer text-center">
-            &copy; FORMULA1 2025 - Car Rental System
         </div>
     </div>
 
@@ -128,6 +131,10 @@
             <?php endif; ?>
             </tbody>
         </table>
+
+        <footer>
+            &copy; FORMULA1 2025 - Car Rental System
+        </footer>
     </div>
 
     <!-- Delete Confirmation Modal -->
@@ -165,4 +172,5 @@
     </script>
 </body>
 </html>
+
 
