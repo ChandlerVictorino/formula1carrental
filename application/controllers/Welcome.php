@@ -14,45 +14,40 @@ class Welcome extends CI_Controller {
         $this->load->view('login');
     }
 
-    public function login(){
-        // Updated validation rules (no xss_clean here)
-        $this->form_validation->set_rules('username', 'Username', 'trim|required');
-        $this->form_validation->set_rules('password', 'Password', 'trim|required');
-        $this->form_validation->set_rules('user_type', 'User Type', 'required|in_list[superadmin,admin]');
+   public function login() {
+    $this->form_validation->set_rules('username', 'Username', 'trim|required');
+    $this->form_validation->set_rules('password', 'Password', 'trim|required');
+    $this->form_validation->set_rules('user_type', 'User Type', 'required|in_list[superadmin,admin]');
 
-        if ($this->form_validation->run() == FALSE) {
-            $this->load->view('login');
+    if ($this->form_validation->run() == FALSE) {
+        $this->load->view('login');
+        return;
+    }
+
+    $username = $this->input->post('username', TRUE);
+    $password = $this->input->post('password', TRUE);
+    $user_type = $this->input->post('user_type', TRUE);
+
+    if ($user_type === 'superadmin') {
+        $superadmin = $this->m_rental->get_superadmin_by_username($username);
+        if ($superadmin && password_verify($password, $superadmin->superadmin_password)) {
+            $this->set_session($superadmin->superadmin_id, $superadmin->superadmin_username, 'superadmin');
+            redirect('superadmin/dashboard');
             return;
         }
-
-        // Manually sanitize input data using xss_clean
-        $username  = $this->security->xss_clean($this->input->post('username', TRUE));
-        $password  = $this->security->xss_clean($this->input->post('password', TRUE));
-        $user_type = $this->security->xss_clean($this->input->post('user_type', TRUE));
-
-        if ($user_type === 'superadmin') {
-            $superadmin = $this->m_rental->get_superadmin_by_username($username);
-            if ($superadmin && password_verify($password, $superadmin->superadmin_password)) {
-                $this->set_session($superadmin->superadmin_id, $superadmin->superadmin_username, 'superadmin');
-                redirect(base_url('superadmin/dashboard'));
-            } else {
-                $data['error'] = 'Invalid username or password.';
-                $this->load->view('login', $data);
-            }
-        } elseif ($user_type === 'admin') {
-            $admin = $this->m_rental->get_admin_by_username($username);
-            if ($admin && password_verify($password, $admin->admin_password)) {
-                $this->set_session($admin->admin_id, $admin->admin_name, 'admin');
-                redirect(base_url('admin'));
-            } else {
-                $data['error'] = 'Invalid username or password.';
-                $this->load->view('login', $data);
-            }
-        } else {
-            $data['error'] = 'Invalid user type selected.';
-            $this->load->view('login', $data);
+    } else if ($user_type === 'admin') {
+        $admin = $this->m_rental->get_admin_by_username($username);
+        if ($admin && password_verify($password, $admin->admin_password)) {
+            $this->set_session($admin->admin_id, $admin->admin_username, 'admin');
+            redirect('admin/dashboard');
+            return;
         }
     }
+
+    $data['error'] = 'Invalid username or password.';
+    $this->load->view('login', $data);
+}
+
 
     private function set_session($id, $name, $role) {
         // Regenerate session ID to prevent session fixation
