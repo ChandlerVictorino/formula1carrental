@@ -119,22 +119,22 @@
                 </tr>
             </thead>
             <tbody>
-            <?php if (!empty(\$admins)) : ?>
-                <?php foreach (\$admins as \$admin) : ?>
+            <?php if (!empty($admins)) : ?>
+                <?php foreach ($admins as $admin) : ?>
                     <tr>
-                        <td><?php echo \$admin->admin_id; ?></td>
-                        <td><?php echo \$admin->admin_name; ?></td>
-                        <td><?php echo \$admin->admin_username; ?></td>
+                        <td><?php echo $admin->admin_id; ?></td>
+                        <td><?php echo $admin->admin_name; ?></td>
+                        <td><?php echo $admin->admin_username; ?></td>
                         <td>
-                            <?php if (!empty(\$admin->admin_image)) : ?>
-                                <img src="<?php echo base_url('uploads/admins/' . \$admin->admin_image); ?>" width="50" height="50">
+                            <?php if (!empty($admin->admin_image)) : ?>
+                                <img src="<?php echo base_url('uploads/admins/' . $admin->admin_image); ?>" width="50" height="50">
                             <?php else : ?>
                                 No Image
                             <?php endif; ?>
                         </td>
                         <td>
-                            <a href="<?php echo base_url('superadmin/edit_admin/' . \$admin->admin_id); ?>" class="btn btn-edit btn-sm">Edit</a>
-                            <a href="<?php echo base_url('superadmin/delete_admin/' . \$admin->admin_id); ?>" class="btn btn-delete btn-sm" onclick="return confirm('Are you sure you want to delete this admin?');">Delete</a>
+                            <a href="<?php echo base_url('superadmin/edit_admin/' . $admin->admin_id); ?>" class="btn btn-edit btn-sm">Edit</a>
+                            <a href="<?php echo base_url('superadmin/delete_admin/' . $admin->admin_id); ?>" class="btn btn-delete btn-sm" onclick="return confirm('Are you sure you want to delete this admin?');">Delete</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
