@@ -1,3 +1,17 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+// Redirect if already logged in
+if ($this->session->userdata('status') === 'login') {
+    $role = $this->session->userdata('role');
+    if ($role === 'superadmin') {
+        redirect('superadmin/dashboard');
+    } elseif ($role === 'admin') {
+        redirect('admin/dashboard');
+    }
+}
+
+
 <!doctype html>
 <html lang="en">
   <head>
