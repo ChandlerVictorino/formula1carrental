@@ -6,13 +6,15 @@ class Superadmin extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('m_rental');
+
+        // Redirect non-superadmins
         if ($this->session->userdata('role') !== 'superadmin') {
             redirect('welcome');
         }
     }
 
     public function dashboard() {
-        $data['admin'] = $this->m_rental->get_data('admin')->result();
+        $data['admins'] = $this->m_rental->get_data('admin')->result();  // <- FIXED: renamed from 'admin' to 'admins'
         $this->load->view('superadmin/dashboard', $data);
     }
 
@@ -39,11 +41,13 @@ class Superadmin extends CI_Controller {
 
     public function update_admin() {
         $admin_id = $this->input->post('admin_id');
+
         $update_data = array(
             'admin_name' => $this->input->post('admin_name'),
             'admin_username' => $this->input->post('admin_username')
         );
 
+        // Only update password if it's not empty
         if (!empty($this->input->post('admin_password'))) {
             $update_data['admin_password'] = md5($this->input->post('admin_password'));
         }
