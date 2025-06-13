@@ -14,7 +14,7 @@ class Superadmin extends CI_Controller {
     }
 
     public function dashboard() {
-        $data['admins'] = $this->m_rental->get_data('admin')->result();  // <- FIXED: renamed from 'admin' to 'admins'
+        $data['admins'] = $this->m_rental->get_data('admin')->result();
         $this->load->view('superadmin/dashboard', $data);
     }
 
@@ -47,7 +47,6 @@ class Superadmin extends CI_Controller {
             'admin_username' => $this->input->post('admin_username')
         );
 
-        // Only update password if it's not empty
         if (!empty($this->input->post('admin_password'))) {
             $update_data['admin_password'] = md5($this->input->post('admin_password'));
         }
@@ -57,9 +56,28 @@ class Superadmin extends CI_Controller {
         redirect('superadmin/dashboard');
     }
 
-    public function delete_admin($id) {
-        $where = array('admin_id' => $id);
-        $this->m_rental->delete_data($where, 'admin');
+    // Delete with password confirmation
+    public function delete_confirmed() {
+        $admin_id = $this->input->post('admin_id');
+        $entered_password = md5($this->input->post('superadmin_password'));
+
+        // Check superadmin password from session user (assume stored in database)
+        $username = $this->session->userdata('username');
+        $where = array(
+            'username' => $username,
+            'password' => $entered_password,
+            'role' => 'superadmin'
+        );
+
+        $superadmin = $this->m_rental->check_login('users', $where); // Adjust 'users' if your table is named differently
+
+        if ($superadmin->num_rows() > 0) {
+            $this->m_rental->delete_data(['admin_id' => $admin_id], 'admin');
+            $this->session->set_flashdata('success', 'Admin deleted successfully.');
+        } else {
+            $this->session->set_flashdata('error', 'Incorrect password. Deletion cancelled.');
+        }
+
         redirect('superadmin/dashboard');
     }
 }
