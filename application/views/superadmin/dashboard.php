@@ -33,8 +33,8 @@
             margin-bottom: 20px;
         }
         .sidebar .logo img {
-            width: 60px;
-            height: 60px;
+            width: 25px;
+            height: 50px;
         }
         .sidebar a.logout {
             color: white;
