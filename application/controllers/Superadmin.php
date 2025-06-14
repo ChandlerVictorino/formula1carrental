@@ -27,7 +27,7 @@ class Superadmin extends CI_Controller {
     public function store_admin() {
         $config['upload_path'] = './uploads/admins/';
         $config['allowed_types'] = 'jpg|jpeg|png';
-        $config['max_size'] = 1024; // 1MB
+        $config['max_size'] = 1024;
         $this->upload->initialize($config);
 
         $image_name = null;
@@ -45,7 +45,7 @@ class Superadmin extends CI_Controller {
         $data = array(
             'admin_name' => $this->input->post('admin_name', TRUE),
             'admin_username' => $this->input->post('admin_username', TRUE),
-            'admin_password' => md5($this->input->post('admin_password', TRUE)),
+            'admin_password' => password_hash($this->input->post('admin_password', TRUE), PASSWORD_DEFAULT),
             'admin_image' => $image_name
         );
 
@@ -68,13 +68,13 @@ class Superadmin extends CI_Controller {
         );
 
         if (!empty($this->input->post('admin_password'))) {
-            $update_data['admin_password'] = md5($this->input->post('admin_password', TRUE));
+            $update_data['admin_password'] = password_hash($this->input->post('admin_password', TRUE), PASSWORD_DEFAULT);
         }
 
         if (!empty($_FILES['admin_image']['name'])) {
             $config['upload_path'] = './uploads/admins/';
             $config['allowed_types'] = 'jpg|jpeg|png';
-            $config['max_size'] = 1024; // 1MB
+            $config['max_size'] = 1024;
             $this->upload->initialize($config);
 
             if ($this->upload->do_upload('admin_image')) {
@@ -108,18 +108,29 @@ class Superadmin extends CI_Controller {
         $this->load->view('superadmin/change_info', $data);
     }
 
-    public function update_superadmin_info() {
-        $name = $this->input->post('name', TRUE);
-        $new_password = $this->input->post('new_password', TRUE);
+    public function update_info() {
+        $this->form_validation->set_rules('admin_name', 'Name', 'required|trim');
 
-        $this->session->set_userdata('name', $name);
-
-        if (!empty($new_password)) {
-            $this->m_rental->update_superadmin_password(0, $new_password);
+        if ($this->form_validation->run() === FALSE) {
+            $this->session->set_flashdata('error', 'Validation failed.');
+            redirect('superadmin/change_info_view');
+            return;
         }
 
-        $this->session->set_flashdata('success', 'Super Admin info updated.');
+        $name = $this->input->post('admin_name', TRUE);
+        $password = $this->input->post('password', TRUE);
+
+        $update_data = ['admin_name' => $name];
+
+        if (!empty($password)) {
+            $update_data['admin_password'] = password_hash($password, PASSWORD_DEFAULT);
+        }
+
+        $this->db->where('admin_username', 'superadmin');
+        $this->db->update('admins', $update_data);
+
+        $this->session->set_userdata('name', $name);
+        $this->session->set_flashdata('success', 'Info updated successfully.');
         redirect('superadmin/change_info_view');
     }
 }
-
