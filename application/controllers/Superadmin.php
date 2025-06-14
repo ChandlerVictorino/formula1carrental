@@ -89,15 +89,23 @@ class Superadmin extends CI_Controller {
     }
 
     public function change_info_view() {
-        $this->load->view('superadmin/change_info');
+        // Fetch Super Admin data (from session in this case)
+        $superadmin = (object) [
+            'admin_name' => $this->session->userdata('name')
+        ];
+
+        $data['superadmin'] = $superadmin;
+        $this->load->view('superadmin/change_info', $data);
     }
 
     public function update_superadmin_info() {
         $name = $this->input->post('name', TRUE);
         $new_password = $this->input->post('new_password', TRUE);
 
+        // Update session name
         $this->session->set_userdata('name', $name);
 
+        // Optional: update in database if you're storing superadmin there
         if (!empty($new_password)) {
             $this->m_rental->update_superadmin_password(0, $new_password);
         }
