@@ -25,6 +25,7 @@ class Welcome extends CI_Controller {
         $this->form_validation->set_rules('user_type', 'User Type', 'required');
 
         if ($this->form_validation->run() != false) {
+
             if ($user_type === 'superadmin') {
                 $superadmin = $this->m_rental->check_superadmin_by_username($username);
 
@@ -36,9 +37,9 @@ class Welcome extends CI_Controller {
                         'status' => 'login'
                     );
                     $this->session->set_userdata($session);
-                    redirect(base_url() . 'superadmin/dashboard');
+                    redirect(base_url().'superadmin/dashboard');
                 } else {
-                    redirect(base_url() . 'welcome?pesan=gagal');
+                    redirect(base_url().'welcome?pesan=gagal');
                 }
 
             } else if ($user_type === 'admin') {
@@ -52,14 +53,15 @@ class Welcome extends CI_Controller {
                         'status' => 'login'
                     );
                     $this->session->set_userdata($session);
-                    redirect(base_url() . 'admin');
+                    redirect(base_url().'admin');
                 } else {
-                    redirect(base_url() . 'welcome?pesan=gagal');
+                    redirect(base_url().'welcome?pesan=gagal');
                 }
 
             } else {
-                redirect(base_url() . 'welcome?pesan=gagal');
+                redirect(base_url().'welcome?pesan=gagal');
             }
+
         } else {
             $this->load->view('login');
         }
