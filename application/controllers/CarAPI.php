@@ -65,4 +65,31 @@ class CarAPI extends CI_Controller {
         $this->output
             ->set_output(json_encode(['message' => 'Car added successfully']));
     }
+
+    // ❌ DELETE: Remove a car by ID
+    public function delete($id) {
+        $this->authenticate();
+
+        if (!is_numeric($id)) {
+            $this->output
+                ->set_status_header(400)
+                ->set_output(json_encode(['error' => 'Invalid ID']));
+            return;
+        }
+
+        // Check if car exists
+        $car = $this->db->get_where('mobile', ['mobile_id' => $id])->row();
+        if (!$car) {
+            $this->output
+                ->set_status_header(404)
+                ->set_output(json_encode(['error' => 'Car not found']));
+            return;
+        }
+
+        // Perform delete
+        $this->db->where('mobile_id', $id)->delete('mobile');
+
+        $this->output
+            ->set_output(json_encode(['message' => 'Car deleted successfully']));
+    }
 }
