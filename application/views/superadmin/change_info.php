@@ -92,7 +92,8 @@
 
             <div class="mb-3">
                 <label for="admin_name" class="form-label">Name</label>
-                <input type="text" class="form-control" id="admin_name" name="admin_name" value="<?= $superadmin->admin_name ?>" required>
+                <input type="text" class="form-control" id="admin_name" name="admin_name" 
+                       value="<?= set_value('admin_name', $superadmin->superadmin_username ?? '') ?>" required>
             </div>
 
             <div class="mb-3">
