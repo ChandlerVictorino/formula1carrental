@@ -11,10 +11,6 @@ class Car_model extends CI_Model {
         return $this->db->get('mobile')->result();
     }
 
-    public function insert_car($data) {
-        return $this->db->insert('mobile', $data);
-    }
-
     public function get_car_by_id($id) {
         return $this->db->get_where('mobile', ['mobile_id' => $id])->row();
     }
