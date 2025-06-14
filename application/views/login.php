@@ -3,7 +3,6 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
     <title>Rental > Login</title>
 
     <!-- Bootstrap core CSS -->
@@ -14,18 +13,23 @@
       .input-group-text {
         background-color: #fff;
         border-left: 0;
-      }
-
-      .form-control:focus {
-        box-shadow: none;
+        padding: 0.375rem 0.6rem;
       }
 
       .input-group .form-control {
         border-right: 0;
+        font-size: 0.9rem;
+        padding: 0.4rem 0.6rem;
       }
 
       .input-group-text i {
+        font-size: 0.9rem;
         color: #6c757d;
+      }
+
+      .form-control-sm {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.85rem;
       }
     </style>
   </head>
@@ -35,8 +39,8 @@
       <div>
         <img src="<?= base_url('assets/img/Formula1.png'); ?>" alt="">
       </div>
-      <h1 class="h3 mb-3 font-weight-bold">Formula 1</h1>
-      <h3 class="h3 mb-3 font-weight-normal">Car Rental System</h3>
+      <h1 class="h4 mb-2 font-weight-bold">Formula 1</h1>
+      <h5 class="h5 mb-3 font-weight-normal">Car Rental System</h5>
 
       <?php if ($this->input->get('pesan') == "gagal"): ?>
         <div class="alert alert-danger text-left">Login Failed!<br>Invalid Details</div>
@@ -46,13 +50,13 @@
         <div class="alert alert-warning text-left">Please login to continue</div>
       <?php endif; ?>
 
-      <input type="text" name="username" class="form-control" placeholder="Username" required value="<?= set_value('username') ?>">
+      <input type="text" name="username" class="form-control form-control-sm" placeholder="Username" required value="<?= set_value('username') ?>">
       <?= form_error('username', '<small class="text-danger">', '</small>'); ?>
 
       <!-- Password field with eye icon -->
       <div class="form-group mt-2">
-        <div class="input-group">
-          <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+        <div class="input-group input-group-sm">
+          <input type="password" name="password" id="password" class="form-control form-control-sm" placeholder="Password" required>
           <div class="input-group-append">
             <span class="input-group-text" id="togglePassword" style="cursor: pointer;">
               <i class="fas fa-eye" id="toggleIcon"></i>
@@ -62,15 +66,15 @@
         <?= form_error('password', '<small class="text-danger">', '</small>'); ?>
       </div>
 
-      <select name="user_type" class="form-control mt-2" required>
+      <select name="user_type" class="form-control form-control-sm mt-2" required>
         <option value="" disabled selected>Select Role</option>
         <option value="admin">Admin</option>
         <option value="superadmin">Super Admin</option>
       </select>
       <?= form_error('user_type', '<small class="text-danger">', '</small>'); ?>
 
-      <button class="btn btn-lg btn-danger btn-block mt-3" type="submit">Login</button>
-      <p class="mt-5 mb-3 text-muted">&copy; <?= date("Y") ?> Formula One</p>
+      <button class="btn btn-sm btn-danger btn-block mt-3" type="submit">Login</button>
+      <p class="mt-5 mb-3 text-muted" style="font-size: 0.8rem;">&copy; <?= date("Y") ?> Formula One</p>
     <?= form_close() ?>
 
     <!-- JS for password toggle -->
