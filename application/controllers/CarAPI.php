@@ -12,7 +12,7 @@ class CarAPI extends CI_Controller {
         $this->output->set_content_type('application/json');
     }
 
-    // 🔒 Token Authentication using Bearer Header
+    // 🔒 Token Authentication
     private function authenticate() {
         $headers = $this->input->request_headers();
         $authHeader = isset($headers['Authorization']) ? $headers['Authorization'] : 
@@ -29,11 +29,9 @@ class CarAPI extends CI_Controller {
     // ✅ GET: List all cars
     public function index() {
         $this->authenticate();
-
         $cars = $this->Car_model->get_all_cars();
 
-        $this->output
-            ->set_output(json_encode($cars));
+        $this->output->set_output(json_encode($cars));
     }
 
     // ✅ POST: Add a new car
@@ -42,7 +40,6 @@ class CarAPI extends CI_Controller {
 
         $input = json_decode(trim(file_get_contents("php://input")), true);
 
-        // 🔍 Check for required fields
         if (!isset($input['carname'], $input['plate'], $input['color'], $input['year'], $input['status'])) {
             $this->output
                 ->set_status_header(400)
@@ -50,7 +47,6 @@ class CarAPI extends CI_Controller {
             return;
         }
 
-        // 🧼 Sanitize input
         $data = [
             'mobile_carname' => $this->security->xss_clean($input['carname']),
             'mobile_plate'   => $this->security->xss_clean($input['plate']),
@@ -59,26 +55,16 @@ class CarAPI extends CI_Controller {
             'mobile_status'  => (int)$input['status']
         ];
 
-        // 🗃️ Insert to DB
         $this->Car_model->insert_car($data);
 
-        $this->output
-            ->set_output(json_encode(['message' => 'Car added successfully']));
+        $this->output->set_output(json_encode(['message' => 'Car added successfully']));
     }
 
-    // ❌ DELETE: Remove a car by ID
+    // ✅ DELETE: Delete car by ID
     public function delete($id) {
         $this->authenticate();
 
-        if (!is_numeric($id)) {
-            $this->output
-                ->set_status_header(400)
-                ->set_output(json_encode(['error' => 'Invalid ID']));
-            return;
-        }
-
-        // Check if car exists
-        $car = $this->db->get_where('mobile', ['mobile_id' => $id])->row();
+        $car = $this->Car_model->get_car_by_id($id);
         if (!$car) {
             $this->output
                 ->set_status_header(404)
@@ -86,10 +72,8 @@ class CarAPI extends CI_Controller {
             return;
         }
 
-        // Perform delete
-        $this->db->where('mobile_id', $id)->delete('mobile');
+        $this->Car_model->delete_car($id);
 
-        $this->output
-            ->set_output(json_encode(['message' => 'Car deleted successfully']));
+        $this->output->set_output(json_encode(['message' => 'Car deleted successfully']));
     }
 }
