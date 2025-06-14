@@ -59,4 +59,5 @@ $route['superadmin/store'] = 'superadmin/store_admin';
 $route['superadmin/edit/(:num)'] = 'superadmin/edit_admin/$1';
 $route['superadmin/update'] = 'superadmin/update_admin';
 $route['superadmin/delete/(:num)'] = 'superadmin/delete_admin/$1';
+$route['superadmin/update_info'] = 'superadmin/update_info'; // ✅ Add this
 
