@@ -24,48 +24,41 @@ class Welcome extends CI_Controller {
         $this->form_validation->set_rules('password', 'Password', 'trim|required');
         $this->form_validation->set_rules('user_type', 'User Type', 'required');
 
-        if($this->form_validation->run() != false){
-
+        if ($this->form_validation->run() != false) {
             if ($user_type === 'superadmin') {
-                $superadmin = $this->m_rental->check_superadmin($username, md5($password));
-                if ($superadmin->num_rows() > 0) {
-                    $row = $superadmin->row();
+                $superadmin = $this->m_rental->check_superadmin_by_username($username);
+
+                if ($superadmin && password_verify($password, $superadmin->superadmin_password)) {
                     $session = array(
-                        'id' => $row->superadmin_id,
-                        'name' => $row->superadmin_username,
+                        'id' => $superadmin->superadmin_id,
+                        'name' => $superadmin->superadmin_username,
                         'role' => 'superadmin',
                         'status' => 'login'
                     );
                     $this->session->set_userdata($session);
-                    redirect(base_url().'superadmin/dashboard');
+                    redirect(base_url() . 'superadmin/dashboard');
                 } else {
-                    redirect(base_url().'welcome?pesan=gagal');
+                    redirect(base_url() . 'welcome?pesan=gagal');
                 }
 
             } else if ($user_type === 'admin') {
-                $where = array(
-                    'admin_username' => $username,
-                    'admin_password' => md5($password)
-                );
-                $data = $this->m_rental->edit_data($where, 'admin');
-                $d = $data->row();
-                $cek = $data->num_rows();
+                $admin = $this->m_rental->get_admin_by_username($username);
 
-                if($cek > 0){
+                if ($admin && password_verify($password, $admin->admin_password)) {
                     $session = array(
-                        'id' => $d->admin_id,
-                        'name' => $d->admin_name,
+                        'id' => $admin->admin_id,
+                        'name' => $admin->admin_name,
                         'role' => 'admin',
                         'status' => 'login'
                     );
                     $this->session->set_userdata($session);
-                    redirect(base_url().'admin');
+                    redirect(base_url() . 'admin');
                 } else {
-                    redirect(base_url().'welcome?pesan=gagal');
+                    redirect(base_url() . 'welcome?pesan=gagal');
                 }
 
             } else {
-                redirect(base_url().'welcome?pesan=gagal');
+                redirect(base_url() . 'welcome?pesan=gagal');
             }
         } else {
             $this->load->view('login');
