@@ -2,11 +2,21 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
     <title>Rental > Login</title>
+    <!-- Bootstrap core CSS -->
     <link href="<?php echo base_url('assets/css/sb-admin-2.min.css'); ?>" rel="stylesheet">
-    <link href="<?php echo base_url('assets/vendor/fontawesome-free/css/all.min.css'); ?>" rel="stylesheet">
+    <link href="<?php echo base_url('assets/vendor/fontawesome-free/css/all.min.css'); ?>" rel="stylesheet" type="text/css">
     <link href="<?php echo base_url('assets/css/signin1.css'); ?>" rel="stylesheet">
+    <style>
+      .input-group .form-control {
+        border-right: none;
+      }
+      .input-group .btn {
+        border-left: none;
+      }
+    </style>
   </head>
   <body class="text-center">
 
@@ -25,12 +35,22 @@
       <div class="alert alert-warning text-left">Please login to continue</div>
     <?php endif; ?>
 
+    <!-- Username -->
     <input type="text" name="username" class="form-control" placeholder="Username" required value="<?= set_value('username') ?>">
     <?= form_error('username', '<small class="text-danger">', '</small>'); ?>
 
-    <input type="password" name="password" class="form-control mt-2" placeholder="Password" required>
+    <!-- Password with Toggle -->
+    <div class="input-group mt-2">
+      <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+          <i class="fas fa-eye" id="toggleIcon"></i>
+        </button>
+      </div>
+    </div>
     <?= form_error('password', '<small class="text-danger">', '</small>'); ?>
 
+    <!-- Role -->
     <select name="user_type" class="form-control mt-2" required>
       <option value="" disabled selected>Select Role</option>
       <option value="admin">Admin</option>
@@ -42,5 +62,18 @@
     <p class="mt-5 mb-3 text-muted">&copy; <?= date("Y") ?> Formula One</p>
   <?= form_close() ?>
 
+  <!-- JS for Toggle Password -->
+  <script>
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    const toggleIcon = document.getElementById('toggleIcon');
+
+    togglePassword.addEventListener('click', function () {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      toggleIcon.classList.toggle('fa-eye');
+      toggleIcon.classList.toggle('fa-eye-slash');
+    });
+  </script>
   </body>
 </html>
