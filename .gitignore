@@ -1,0 +1,5 @@
+# Ignore all files in uploads/admins
+uploads/admins/*
+
+# Except the .gitkeep file so folder stays in Git
+!uploads/admins/.gitkeep
