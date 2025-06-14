@@ -12,60 +12,39 @@ class CarAPI extends CI_Controller {
         $this->output->set_content_type('application/json');
     }
 
-    // 🔒 Bearer Token Authentication
+    // 🔒 Token Authentication
     private function authenticate() {
         $headers = $this->input->request_headers();
-        $authHeader = isset($headers['Authorization']) ? $headers['Authorization'] : 
+        $authHeader = isset($headers['Authorization']) ? $headers['Authorization'] :
                       (isset($headers['authorization']) ? $headers['authorization'] : null);
 
-        if (!$authHeader) {
+        if (!$authHeader || $authHeader !== 'Bearer ' . $this->api_token) {
             $this->output
                 ->set_status_header(401)
-                ->set_output(json_encode(['error' => 'Authorization header missing']));
-            exit;
-        }
-
-        if ($authHeader !== 'Bearer ' . $this->api_token) {
-            $this->output
-                ->set_status_header(401)
-                ->set_output(json_encode(['error' => 'Invalid token', 'received' => $authHeader]));
+                ->set_output(json_encode(['error' => 'Unauthorized']));
             exit;
         }
     }
 
-    // ✅ GET: Fetch all cars
+    // ✅ GET: List all cars
     public function index() {
         $this->authenticate();
 
         $cars = $this->Car_model->get_all_cars();
 
-        $this->output->set_output(json_encode($cars));
-    }
+        // Format to match Postman tests
+        $formatted = array_map(function($car) {
+            return [
+                'id' => (string) $car->mobile_id,
+                'make' => explode(' ', $car->mobile_carname)[0],
+                'model' => explode(' ', $car->mobile_carname)[1] ?? '',
+                'year' => (int) $car->mobile_year,
+                'price' => isset($car->mobile_price) ? (float) $car->mobile_price : 0,
+                'availability' => $car->mobile_status == 1
+            ];
+        }, $cars);
 
-    // ✅ POST: Add new car
-    public function create() {
-        $this->authenticate();
-
-        $input = json_decode(trim(file_get_contents("php://input")), true);
-
-        if (!isset($input['carname'], $input['plate'], $input['color'], $input['year'], $input['status'])) {
-            $this->output
-                ->set_status_header(400)
-                ->set_output(json_encode(['error' => 'Missing required fields']));
-            return;
-        }
-
-        $data = [
-            'mobile_carname' => $this->security->xss_clean($input['carname']),
-            'mobile_plate'   => $this->security->xss_clean($input['plate']),
-            'mobile_color'   => $this->security->xss_clean($input['color']),
-            'mobile_year'    => (int) $input['year'],
-            'mobile_status'  => (int) $input['status']
-        ];
-
-        $this->Car_model->insert_car($data);
-
-        $this->output->set_output(json_encode(['message' => 'Car added successfully']));
+        $this->output->set_output(json_encode($formatted));
     }
 
     // ✅ DELETE: Delete car by ID
