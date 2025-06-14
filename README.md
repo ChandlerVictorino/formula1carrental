@@ -49,6 +49,7 @@ Admin
 ![image](https://github.com/user-attachments/assets/65036ccd-1db8-446b-bbe8-3236a3b93db6)
 
 Super Admin
-![image](https://github.com/user-attachments/assets/6c12d1b0-7d39-4eb3-93b5-155259328fb2)
+![image](https://github.com/user-attachments/assets/acf3722c-3437-4e2b-a947-a34fa97248da)
+
 
 
