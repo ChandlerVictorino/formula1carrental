@@ -7,7 +7,7 @@ class Superadmin extends CI_Controller {
         parent::__construct();
         $this->load->model('m_rental');
         $this->load->library(['form_validation', 'upload']);
-        $this->load->helper('security');
+        $this->load->helper(['security', 'form', 'url']);
 
         if ($this->session->userdata('role') !== 'superadmin') {
             redirect('welcome');
@@ -25,6 +25,16 @@ class Superadmin extends CI_Controller {
     }
 
     public function store_admin() {
+        $this->form_validation->set_rules('admin_name', 'Name', 'required|trim');
+        $this->form_validation->set_rules('admin_username', 'Username', 'required|trim|is_unique[admin.admin_username]');
+        $this->form_validation->set_rules('admin_password', 'Password', 'required|min_length[6]');
+
+        if ($this->form_validation->run() === FALSE) {
+            $this->session->set_flashdata('error', validation_errors());
+            redirect('superadmin/create_admin');
+            return;
+        }
+
         $config['upload_path'] = './uploads/admins/';
         $config['allowed_types'] = 'jpg|jpeg|png';
         $config['max_size'] = 1024;
@@ -42,12 +52,12 @@ class Superadmin extends CI_Controller {
             }
         }
 
-        $data = array(
+        $data = [
             'admin_name' => $this->input->post('admin_name', TRUE),
             'admin_username' => $this->input->post('admin_username', TRUE),
             'admin_password' => password_hash($this->input->post('admin_password', TRUE), PASSWORD_DEFAULT),
             'admin_image' => $image_name
-        );
+        ];
 
         $this->m_rental->insert_data($data, 'admin');
         $this->session->set_flashdata('success', 'Admin created successfully.');
@@ -55,17 +65,17 @@ class Superadmin extends CI_Controller {
     }
 
     public function edit_admin($id) {
-        $where = array('admin_id' => $id);
+        $where = ['admin_id' => $id];
         $data['admin'] = $this->m_rental->edit_data($where, 'admin')->row();
         $this->load->view('superadmin/edit_admin', $data);
     }
 
     public function update_admin() {
         $admin_id = $this->input->post('admin_id');
-        $update_data = array(
+        $update_data = [
             'admin_name' => $this->input->post('admin_name', TRUE),
             'admin_username' => $this->input->post('admin_username', TRUE)
-        );
+        ];
 
         if (!empty($this->input->post('admin_password'))) {
             $update_data['admin_password'] = password_hash($this->input->post('admin_password', TRUE), PASSWORD_DEFAULT);
@@ -87,7 +97,7 @@ class Superadmin extends CI_Controller {
             }
         }
 
-        $where = array('admin_id' => $admin_id);
+        $where = ['admin_id' => $admin_id];
         $this->m_rental->update_data($where, $update_data, 'admin');
         $this->session->set_flashdata('success', 'Admin updated successfully.');
         redirect('superadmin/dashboard');
@@ -103,7 +113,6 @@ class Superadmin extends CI_Controller {
         $superadmin = (object) [
             'admin_name' => $this->session->userdata('name')
         ];
-
         $data['superadmin'] = $superadmin;
         $this->load->view('superadmin/change_info', $data);
     }
@@ -112,14 +121,13 @@ class Superadmin extends CI_Controller {
         $this->form_validation->set_rules('admin_name', 'Name', 'required|trim');
 
         if ($this->form_validation->run() === FALSE) {
-            $this->session->set_flashdata('error', 'Validation failed.');
+            $this->session->set_flashdata('error', validation_errors());
             redirect('superadmin/change_info_view');
             return;
         }
 
         $name = $this->input->post('admin_name', TRUE);
         $password = $this->input->post('password', TRUE);
-
         $update_data = ['admin_name' => $name];
 
         if (!empty($password)) {
@@ -127,7 +135,7 @@ class Superadmin extends CI_Controller {
         }
 
         $this->db->where('admin_username', 'superadmin');
-        $this->db->update('admins', $update_data);
+        $this->db->update('admin', $update_data); // ✅ fixed table name
 
         $this->session->set_userdata('name', $name);
         $this->session->set_flashdata('success', 'Info updated successfully.');
