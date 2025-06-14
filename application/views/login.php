@@ -2,68 +2,45 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Rental > Login</title>
-    <!-- Bootstrap core CSS -->
-    <link href="<?php echo base_url().'assets/css/sb-admin-2.min.css'; ?>" rel="stylesheet">
-    <link href="<?php echo base_url().'assets/vendor/fontawesome-free/css/all.min.css'; ?>" rel="stylesheet" type="text/css">
-
-    <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        user-select: none;
-      }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-    </style>
-    <!-- Custom styles for this template -->
-    <link href="<?php echo base_url().'assets/css/signin1.css'; ?>" rel="stylesheet">
+    <link href="<?php echo base_url('assets/css/sb-admin-2.min.css'); ?>" rel="stylesheet">
+    <link href="<?php echo base_url('assets/vendor/fontawesome-free/css/all.min.css'); ?>" rel="stylesheet">
+    <link href="<?php echo base_url('assets/css/signin1.css'); ?>" rel="stylesheet">
   </head>
   <body class="text-center">
-  <form class="form-signin" method="post" action="<?php echo base_url().'welcome/login'; ?>">
+
+  <?= form_open('welcome/login', ['class' => 'form-signin']) ?>
     <div>
-      <img src="assets/img/Formula1.png" alt="">
+      <img src="<?php echo base_url('assets/img/Formula1.png'); ?>" alt="">
     </div>
     <h1 class="h3 mb-3 font-weight-bold">Formula 1</h1>
     <h3 class="h3 mb-3 font-weight-normal">Car Rental System</h3>
 
-    <?php
-      if(isset($_GET['pesan'])){
-          if($_GET['pesan'] == "gagal"){
-              echo '<div class="alert alert-danger text-left" role="alert"><strong>Login Failed!</strong><br>Invalid Details</div>';
-          } else if($_GET['pesan'] == "logout"){
-              echo '<div class="alert alert-success text-left" role="alert">Logged Out!</div>';
-          } else if($_GET['pesan'] == "belumlogin"){
-              echo '<div class="alert alert-warning text-left" role="alert">Please login to continue</div>';
-          }
-      }
-    ?>
+    <?php if ($this->input->get('pesan') == "gagal"): ?>
+      <div class="alert alert-danger text-left">Login Failed!<br>Invalid Details</div>
+    <?php elseif ($this->input->get('pesan') == "logout"): ?>
+      <div class="alert alert-success text-left">Logged Out!</div>
+    <?php elseif ($this->input->get('pesan') == "belumlogin"): ?>
+      <div class="alert alert-warning text-left">Please login to continue</div>
+    <?php endif; ?>
 
-    <label for="inputUname" class="sr-only">Username</label>
-    <input type="text" name="username" id="inputUname" class="form-control" placeholder="Username" required>
-    <?php echo form_error('username'); ?>
+    <input type="text" name="username" class="form-control" placeholder="Username" required value="<?= set_value('username') ?>">
+    <?= form_error('username', '<small class="text-danger">', '</small>'); ?>
 
-    <label for="inputPassword" class="sr-only">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
-    <?php echo form_error('password'); ?>
+    <input type="password" name="password" class="form-control mt-2" placeholder="Password" required>
+    <?= form_error('password', '<small class="text-danger">', '</small>'); ?>
 
-    <!-- New Dropdown for Role Selection -->
-    <label for="user_type" class="sr-only">User Type</label>
-    <select name="user_type" id="user_type" class="form-control mb-3" required>
+    <select name="user_type" class="form-control mt-2" required>
       <option value="" disabled selected>Select Role</option>
       <option value="admin">Admin</option>
       <option value="superadmin">Super Admin</option>
     </select>
-    <?php echo form_error('user_type'); ?>
+    <?= form_error('user_type', '<small class="text-danger">', '</small>'); ?>
 
-    <button class="btn btn-lg btn-danger btn-block" type="submit">Login</button>
-    <p class="mt-5 mb-3 text-muted">&copy; <?php echo date("Y"); ?> Formula One</p>
-  </form>
+    <button class="btn btn-lg btn-danger btn-block mt-3" type="submit">Login</button>
+    <p class="mt-5 mb-3 text-muted">&copy; <?= date("Y") ?> Formula One</p>
+  <?= form_close() ?>
+
   </body>
 </html>
