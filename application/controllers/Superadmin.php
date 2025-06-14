@@ -140,14 +140,14 @@ class Superadmin extends CI_Controller {
         redirect('superadmin/change_info_view');
     }
 
-    // ⚠ TEMPORARY FUNCTION: run once to hash the password of existing superadmin
+    // ⚠ TEMPORARY FUNCTION: Hash superadmin's plain password
     public function hash_my_password_now() {
-        $plain_password = 'password123'; // your existing password
+        $plain_password = 'password123'; // change as needed
         $hashed = password_hash($plain_password, PASSWORD_DEFAULT);
 
         $this->db->where('superadmin_username', 'superadmin')
                  ->update('superadmin', ['superadmin_password' => $hashed]);
 
-        echo "✅ Superadmin password has been hashed. You can now log in securely.";
+        echo "✅ Superadmin password has been hashed.";
     }
 }
