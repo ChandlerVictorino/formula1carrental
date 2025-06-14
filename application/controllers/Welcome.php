@@ -19,7 +19,7 @@ class Welcome extends CI_Controller {
         $password = $this->input->post('password', TRUE);
         $user_type = $this->input->post('user_type');
 
-        // Validate form inputs
+        // Validate form
         $this->form_validation->set_rules('username', 'Username', 'trim|required');
         $this->form_validation->set_rules('password', 'Password', 'trim|required');
         $this->form_validation->set_rules('user_type', 'User Type', 'required');
@@ -29,7 +29,8 @@ class Welcome extends CI_Controller {
             if ($user_type === 'superadmin') {
                 $superadmin = $this->m_rental->check_superadmin_by_username($username);
 
-                if ($superadmin && password_verify($password, $superadmin->superadmin_password)) {
+                // ✅ TEMP: No password hashing for superadmin
+                if ($superadmin && $password === $superadmin->superadmin_password) {
                     $session = array(
                         'id' => $superadmin->superadmin_id,
                         'name' => $superadmin->superadmin_username,
