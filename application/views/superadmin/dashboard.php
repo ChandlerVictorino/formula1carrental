@@ -1,13 +1,22 @@
-<?php
-// application/views/superadmin/dashboard.php
-?>
+<?php if ($this->session->flashdata('success')): ?>
+    <div class="alert alert-success position-fixed top-0 end-0 m-3 fade show" role="alert">
+        <?php echo $this->session->flashdata('success'); ?>
+    </div>
+<?php endif; ?>
+<?php if ($this->session->flashdata('error')): ?>
+    <div class="alert alert-danger position-fixed top-0 end-0 m-3 fade show" role="alert">
+        <?php echo $this->session->flashdata('error'); ?>
+    </div>
+<?php endif; ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Super Admin Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
         body {
             background-color: #f8f9fa;
@@ -86,35 +95,13 @@
             color: #6c757d;
             font-size: 0.9rem;
         }
+        .admin-image {
+            object-fit: cover;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
-
-<!-- Toast Container -->
-<div aria-live="polite" aria-atomic="true" class="position-relative">
-    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
-        <?php if ($this->session->flashdata('success')): ?>
-            <div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        <?php echo $this->session->flashdata('success'); ?>
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-            </div>
-        <?php endif; ?>
-        <?php if ($this->session->flashdata('error')): ?>
-            <div class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        <?php echo $this->session->flashdata('error'); ?>
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-            </div>
-        <?php endif; ?>
-    </div>
-</div>
 
 <div class="sidebar">
     <div class="logo">
@@ -134,13 +121,13 @@
 
     <table class="table table-bordered">
         <thead>
-            <tr>
-                <th>ID</th>
-                <th>Admin Name</th>
-                <th>Username</th>
-                <th>Image</th>
-                <th>Actions</th>
-            </tr>
+        <tr>
+            <th>ID</th>
+            <th>Admin Name</th>
+            <th>Username</th>
+            <th>Image</th>
+            <th>Actions</th>
+        </tr>
         </thead>
         <tbody>
         <?php if (!empty($admins)) : ?>
@@ -151,7 +138,7 @@
                     <td><?php echo $admin->admin_username; ?></td>
                     <td>
                         <?php if (!empty($admin->admin_image)) : ?>
-                            <img src="<?php echo base_url('uploads/admins/' . $admin->admin_image); ?>" width="50" height="50">
+                            <img src="<?php echo base_url('uploads/admins/' . $admin->admin_image); ?>" width="50" height="50" class="admin-image">
                         <?php else : ?>
                             No Image
                         <?php endif; ?>
@@ -175,17 +162,11 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var toastElList = [].slice.call(document.querySelectorAll('.toast'));
-        toastElList.map(function (toastEl) {
-            new bootstrap.Toast(toastEl).show();
-        });
-    });
+    // Auto-hide flash messages
+    setTimeout(() => {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => alert.remove());
+    }, 3000);
 </script>
-
-</body>
-</html>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
