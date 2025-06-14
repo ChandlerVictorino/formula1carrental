@@ -27,14 +27,19 @@ class Superadmin extends CI_Controller {
     public function store_admin() {
         $config['upload_path'] = './uploads/admins/';
         $config['allowed_types'] = 'jpg|jpeg|png';
-        $config['max_size'] = 2048;
+        $config['max_size'] = 1024; // 1MB
         $this->upload->initialize($config);
 
-        if (!$this->upload->do_upload('admin_image')) {
-            $image_name = null;
-        } else {
-            $image_data = $this->upload->data();
-            $image_name = $image_data['file_name'];
+        $image_name = null;
+        if (!empty($_FILES['admin_image']['name'])) {
+            if (!$this->upload->do_upload('admin_image')) {
+                $this->session->set_flashdata('error', $this->upload->display_errors());
+                redirect('superadmin/create_admin');
+                return;
+            } else {
+                $image_data = $this->upload->data();
+                $image_name = $image_data['file_name'];
+            }
         }
 
         $data = array(
@@ -45,6 +50,7 @@ class Superadmin extends CI_Controller {
         );
 
         $this->m_rental->insert_data($data, 'admin');
+        $this->session->set_flashdata('success', 'Admin created successfully.');
         redirect('superadmin/dashboard');
     }
 
@@ -68,17 +74,22 @@ class Superadmin extends CI_Controller {
         if (!empty($_FILES['admin_image']['name'])) {
             $config['upload_path'] = './uploads/admins/';
             $config['allowed_types'] = 'jpg|jpeg|png';
-            $config['max_size'] = 2048;
+            $config['max_size'] = 1024; // 1MB
             $this->upload->initialize($config);
 
             if ($this->upload->do_upload('admin_image')) {
                 $image_data = $this->upload->data();
                 $update_data['admin_image'] = $image_data['file_name'];
+            } else {
+                $this->session->set_flashdata('error', $this->upload->display_errors());
+                redirect('superadmin/edit_admin/' . $admin_id);
+                return;
             }
         }
 
         $where = array('admin_id' => $admin_id);
         $this->m_rental->update_data($where, $update_data, 'admin');
+        $this->session->set_flashdata('success', 'Admin updated successfully.');
         redirect('superadmin/dashboard');
     }
 
@@ -89,7 +100,6 @@ class Superadmin extends CI_Controller {
     }
 
     public function change_info_view() {
-        // Fetch Super Admin data (from session in this case)
         $superadmin = (object) [
             'admin_name' => $this->session->userdata('name')
         ];
@@ -102,10 +112,8 @@ class Superadmin extends CI_Controller {
         $name = $this->input->post('name', TRUE);
         $new_password = $this->input->post('new_password', TRUE);
 
-        // Update session name
         $this->session->set_userdata('name', $name);
 
-        // Optional: update in database if you're storing superadmin there
         if (!empty($new_password)) {
             $this->m_rental->update_superadmin_password(0, $new_password);
         }
@@ -114,3 +122,4 @@ class Superadmin extends CI_Controller {
         redirect('superadmin/change_info_view');
     }
 }
+
