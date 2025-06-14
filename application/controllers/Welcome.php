@@ -19,7 +19,7 @@ class Welcome extends CI_Controller {
         $password = $this->input->post('password', TRUE);
         $user_type = $this->input->post('user_type');
 
-        // Validate form
+        // Validate form inputs
         $this->form_validation->set_rules('username', 'Username', 'trim|required');
         $this->form_validation->set_rules('password', 'Password', 'trim|required');
         $this->form_validation->set_rules('user_type', 'User Type', 'required');
