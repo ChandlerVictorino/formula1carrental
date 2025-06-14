@@ -23,17 +23,27 @@ class M_rental extends CI_Model {
         $this->db->delete($table);
     }
 
-public function check_superadmin($username, $password) {
-    return $this->db
-        ->where('superadmin_username', $username)
-        ->where('superadmin_password', $password)
-        ->get('superadmin');
-}
+    // ✅ Replace old check_superadmin (which used md5) with secure version
+    public function check_superadmin_by_username($username) {
+        return $this->db
+            ->where('superadmin_username', $username)
+            ->get('superadmin')
+            ->row();
+    }
 
-
+    // ✅ Secure superadmin password update (already updated in your controller)
     public function update_superadmin_password($superadmin_id, $new_password) {
+        $hashed = password_hash($new_password, PASSWORD_DEFAULT);
         return $this->db
             ->where('superadmin_id', $superadmin_id)
-            ->update('superadmin', ['superadmin_password' => md5($new_password)]);
+            ->update('superadmin', ['superadmin_password' => $hashed]);
+    }
+
+    // ✅ Added: Secure admin fetch by username for login verification
+    public function get_admin_by_username($username) {
+        return $this->db
+            ->where('admin_username', $username)
+            ->get('admin')
+            ->row();
     }
 }
