@@ -63,6 +63,7 @@ $route['superadmin/update_info'] = 'superadmin/update_info'; // ✅ Add this
 
 $route['api/cars'] = 'CarAPI/index';                         // GET
 $route['api/cars/create']['post'] = 'CarAPI/create';         // POST
-$route['api/cars/delete/(:num)']['delete'] = 'CarAPI/delete/$1'; // DELETE
+$route['api/cars/(:num)']['delete'] = 'CarAPI/delete/$1';
+
 
 
