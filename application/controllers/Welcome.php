@@ -6,6 +6,8 @@ class Welcome extends CI_Controller {
     function __construct(){
         parent::__construct();
         $this->load->model('m_rental');
+        $this->load->library('form_validation');
+        $this->load->helper('security');
     }
 
     public function index(){
@@ -13,8 +15,8 @@ class Welcome extends CI_Controller {
     }
 
     public function login(){
-        $username = $this->input->post('username');
-        $password = $this->input->post('password');
+        $username = $this->input->post('username', TRUE);
+        $password = $this->input->post('password', TRUE);
         $user_type = $this->input->post('user_type');
 
         // Validate form
@@ -24,7 +26,6 @@ class Welcome extends CI_Controller {
 
         if($this->form_validation->run() != false){
 
-            // Super Admin Login (from database)
             if ($user_type === 'superadmin') {
                 $superadmin = $this->m_rental->check_superadmin($username, md5($password));
                 if ($superadmin->num_rows() > 0) {
@@ -41,7 +42,6 @@ class Welcome extends CI_Controller {
                     redirect(base_url().'welcome?pesan=gagal');
                 }
 
-            // Admin Login (from database)
             } else if ($user_type === 'admin') {
                 $where = array(
                     'admin_username' => $username,
@@ -72,7 +72,6 @@ class Welcome extends CI_Controller {
         }
     }
 
-    // ✅ LOGOUT FUNCTION
     public function logout(){
         $this->session->sess_destroy();
         redirect('welcome?pesan=logout');
