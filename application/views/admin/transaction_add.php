@@ -6,6 +6,10 @@
 <div class="card shadow mb-4">
     <div class="card-body">
         <form action="<?php echo base_url().'admin/transaction_add_act' ?>" method="post">
+            <!-- CSRF Protection -->
+            <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" 
+                   value="<?php echo $this->security->get_csrf_hash(); ?>" />
+
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Customer</label>
                 <div class="col-sm-10">
