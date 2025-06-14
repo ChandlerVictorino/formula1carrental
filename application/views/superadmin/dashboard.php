@@ -1,9 +1,6 @@
-<?php if ($this->session->flashdata('success')): ?>
-    <div class="alert alert-success"><?php echo $this->session->flashdata('success'); ?></div>
-<?php endif; ?>
-<?php if ($this->session->flashdata('error')): ?>
-    <div class="alert alert-danger"><?php echo $this->session->flashdata('error'); ?></div>
-<?php endif; ?>
+<?php
+// application/views/superadmin/dashboard.php
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -92,62 +89,102 @@
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <div class="logo">
-            <img src="<?php echo base_url('assets/img/f1logii.png'); ?>" alt="Logo">
-        </div>
-        <div>
-            <a href="<?php echo base_url('superadmin/change_info_view'); ?>" class="logout">Change Info</a><br>
-            <a href="<?php echo base_url('welcome/logout'); ?>" class="logout">Logout</a>
-        </div>
+
+<!-- Toast Container -->
+<div aria-live="polite" aria-atomic="true" class="position-relative">
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+        <?php if ($this->session->flashdata('success')): ?>
+            <div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <?php echo $this->session->flashdata('success'); ?>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        <?php endif; ?>
+        <?php if ($this->session->flashdata('error')): ?>
+            <div class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <?php echo $this->session->flashdata('error'); ?>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<div class="sidebar">
+    <div class="logo">
+        <img src="<?php echo base_url('assets/img/f1logii.png'); ?>" alt="Logo">
+    </div>
+    <div>
+        <a href="<?php echo base_url('superadmin/change_info_view'); ?>" class="logout">Change Info</a><br>
+        <a href="<?php echo base_url('welcome/logout'); ?>" class="logout">Logout</a>
+    </div>
+</div>
+
+<div class="dashboard-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Super Admin Dashboard</h2>
+        <a href="<?php echo base_url('superadmin/create_admin'); ?>" class="btn btn-create">+ Create Admin</a>
     </div>
 
-    <div class="dashboard-container">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="fw-bold">Super Admin Dashboard</h2>
-            <a href="<?php echo base_url('superadmin/create_admin'); ?>" class="btn btn-create">+ Create Admin</a>
-        </div>
-
-        <table class="table table-bordered">
-            <thead>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Admin Name</th>
+                <th>Username</th>
+                <th>Image</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php if (!empty($admins)) : ?>
+            <?php foreach ($admins as $admin) : ?>
                 <tr>
-                    <th>ID</th>
-                    <th>Admin Name</th>
-                    <th>Username</th>
-                    <th>Image</th>
-                    <th>Actions</th>
+                    <td><?php echo $admin->admin_id; ?></td>
+                    <td><?php echo $admin->admin_name; ?></td>
+                    <td><?php echo $admin->admin_username; ?></td>
+                    <td>
+                        <?php if (!empty($admin->admin_image)) : ?>
+                            <img src="<?php echo base_url('uploads/admins/' . $admin->admin_image); ?>" width="50" height="50">
+                        <?php else : ?>
+                            No Image
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <a href="<?php echo base_url('superadmin/edit_admin/' . $admin->admin_id); ?>" class="btn btn-edit btn-sm">Edit</a>
+                        <a href="<?php echo base_url('superadmin/delete_admin/' . $admin->admin_id); ?>" class="btn btn-delete btn-sm" onclick="return confirm('Are you sure you want to delete this admin?');">Delete</a>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-            <?php if (!empty($admins)) : ?>
-                <?php foreach ($admins as $admin) : ?>
-                    <tr>
-                        <td><?php echo $admin->admin_id; ?></td>
-                        <td><?php echo $admin->admin_name; ?></td>
-                        <td><?php echo $admin->admin_username; ?></td>
-                        <td>
-                            <?php if (!empty($admin->admin_image)) : ?>
-                                <img src="<?php echo base_url('uploads/admins/' . $admin->admin_image); ?>" width="50" height="50">
-                            <?php else : ?>
-                                No Image
-                            <?php endif; ?>
-                        </td>
-                        <td>
-                            <a href="<?php echo base_url('superadmin/edit_admin/' . $admin->admin_id); ?>" class="btn btn-edit btn-sm">Edit</a>
-                            <a href="<?php echo base_url('superadmin/delete_admin/' . $admin->admin_id); ?>" class="btn btn-delete btn-sm" onclick="return confirm('Are you sure you want to delete this admin?');">Delete</a>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php else : ?>
-                <tr><td colspan="5" class="text-center">No admin accounts found.</td></tr>
-            <?php endif; ?>
-            </tbody>
-        </table>
+            <?php endforeach; ?>
+        <?php else : ?>
+            <tr><td colspan="5" class="text-center">No admin accounts found.</td></tr>
+        <?php endif; ?>
+        </tbody>
+    </table>
 
-        <footer>
-            &copy; FORMULA1 2025 - Car Rental System
-        </footer>
-    </div>
+    <footer>
+        &copy; FORMULA1 2025 - Car Rental System
+    </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+        toastElList.map(function (toastEl) {
+            new bootstrap.Toast(toastEl).show();
+        });
+    });
+</script>
+
+</body>
+</html>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
