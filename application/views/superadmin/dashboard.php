@@ -1,22 +1,10 @@
-<?php if ($this->session->flashdata('success')): ?>
-    <div class="alert alert-success position-fixed top-0 end-0 m-3 fade show" role="alert">
-        <?php echo $this->session->flashdata('success'); ?>
-    </div>
-<?php endif; ?>
-<?php if ($this->session->flashdata('error')): ?>
-    <div class="alert alert-danger position-fixed top-0 end-0 m-3 fade show" role="alert">
-        <?php echo $this->session->flashdata('error'); ?>
-    </div>
-<?php endif; ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Super Admin Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <style>
         body {
             background-color: #f8f9fa;
@@ -95,13 +83,22 @@
             color: #6c757d;
             font-size: 0.9rem;
         }
-        .admin-image {
-            object-fit: cover;
-            border-radius: 5px;
-        }
     </style>
 </head>
 <body>
+
+<!-- FLASH MESSAGE FIX -->
+<?php if ($message = $this->session->flashdata('success', TRUE)): ?>
+    <div class="alert alert-success position-fixed top-0 end-0 m-3 shadow fade show" role="alert" style="z-index: 9999;">
+        <?= $message ?>
+    </div>
+<?php endif; ?>
+
+<?php if ($message = $this->session->flashdata('error', TRUE)): ?>
+    <div class="alert alert-danger position-fixed top-0 end-0 m-3 shadow fade show" role="alert" style="z-index: 9999;">
+        <?= $message ?>
+    </div>
+<?php endif; ?>
 
 <div class="sidebar">
     <div class="logo">
@@ -121,13 +118,13 @@
 
     <table class="table table-bordered">
         <thead>
-        <tr>
-            <th>ID</th>
-            <th>Admin Name</th>
-            <th>Username</th>
-            <th>Image</th>
-            <th>Actions</th>
-        </tr>
+            <tr>
+                <th>ID</th>
+                <th>Admin Name</th>
+                <th>Username</th>
+                <th>Image</th>
+                <th>Actions</th>
+            </tr>
         </thead>
         <tbody>
         <?php if (!empty($admins)) : ?>
@@ -138,7 +135,7 @@
                     <td><?php echo $admin->admin_username; ?></td>
                     <td>
                         <?php if (!empty($admin->admin_image)) : ?>
-                            <img src="<?php echo base_url('uploads/admins/' . $admin->admin_image); ?>" width="50" height="50" class="admin-image">
+                            <img src="<?php echo base_url('uploads/admins/' . $admin->admin_image); ?>" width="50" height="50">
                         <?php else : ?>
                             No Image
                         <?php endif; ?>
@@ -161,12 +158,5 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    // Auto-hide flash messages
-    setTimeout(() => {
-        const alerts = document.querySelectorAll('.alert');
-        alerts.forEach(alert => alert.remove());
-    }, 3000);
-</script>
 </body>
 </html>
