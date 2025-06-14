@@ -64,6 +64,7 @@ class CarAPI extends CI_Controller {
     public function delete($id) {
         $this->authenticate();
 
+        // Confirm existence
         $car = $this->Car_model->get_car_by_id($id);
         if (!$car) {
             $this->output
