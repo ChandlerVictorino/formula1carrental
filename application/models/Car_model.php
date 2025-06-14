@@ -17,13 +17,14 @@ class Car_model extends CI_Model {
         return $this->db->insert('mobile', $data);
     }
 
-    // Get car by ID
-    public function get_car_by_id($id) {
-        return $this->db->get_where('mobile', ['mobile_id' => $id])->row();
-    }
+// Get single car by ID
+public function get_car_by_id($id) {
+    return $this->db->get_where('mobile', ['mobile_id' => $id])->row();
+}
 
-    // Delete car by ID
-    public function delete_car($id) {
-        return $this->db->delete('mobile', ['mobile_id' => $id]);
-    }
+// Delete car by ID
+public function delete_car($id) {
+    return $this->db->delete('mobile', ['mobile_id' => $id]);
+}
+
 }
