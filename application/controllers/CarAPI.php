@@ -12,29 +12,37 @@ class CarAPI extends CI_Controller {
         $this->output->set_content_type('application/json');
     }
 
-    // 🔒 Token Authentication
+    // 🔒 Bearer Token Authentication
     private function authenticate() {
         $headers = $this->input->request_headers();
         $authHeader = isset($headers['Authorization']) ? $headers['Authorization'] : 
                       (isset($headers['authorization']) ? $headers['authorization'] : null);
 
-        if (!$authHeader || $authHeader !== 'Bearer ' . $this->api_token) {
+        if (!$authHeader) {
             $this->output
                 ->set_status_header(401)
-                ->set_output(json_encode(['error' => 'Unauthorized']));
+                ->set_output(json_encode(['error' => 'Authorization header missing']));
+            exit;
+        }
+
+        if ($authHeader !== 'Bearer ' . $this->api_token) {
+            $this->output
+                ->set_status_header(401)
+                ->set_output(json_encode(['error' => 'Invalid token', 'received' => $authHeader]));
             exit;
         }
     }
 
-    // ✅ GET: List all cars
+    // ✅ GET: Fetch all cars
     public function index() {
         $this->authenticate();
+
         $cars = $this->Car_model->get_all_cars();
 
         $this->output->set_output(json_encode($cars));
     }
 
-    // ✅ POST: Add a new car
+    // ✅ POST: Add new car
     public function create() {
         $this->authenticate();
 
@@ -51,8 +59,8 @@ class CarAPI extends CI_Controller {
             'mobile_carname' => $this->security->xss_clean($input['carname']),
             'mobile_plate'   => $this->security->xss_clean($input['plate']),
             'mobile_color'   => $this->security->xss_clean($input['color']),
-            'mobile_year'    => (int)$input['year'],
-            'mobile_status'  => (int)$input['status']
+            'mobile_year'    => (int) $input['year'],
+            'mobile_status'  => (int) $input['status']
         ];
 
         $this->Car_model->insert_car($data);
@@ -64,7 +72,6 @@ class CarAPI extends CI_Controller {
     public function delete($id) {
         $this->authenticate();
 
-        // Confirm existence
         $car = $this->Car_model->get_car_by_id($id);
         if (!$car) {
             $this->output
