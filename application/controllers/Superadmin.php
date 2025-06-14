@@ -110,9 +110,7 @@ class Superadmin extends CI_Controller {
     }
 
     public function change_info_view() {
-        $superadmin = (object) [
-            'admin_name' => $this->session->userdata('name')
-        ];
+        $superadmin = $this->m_rental->check_superadmin_by_username('superadmin');
         $data['superadmin'] = $superadmin;
         $this->load->view('superadmin/change_info', $data);
     }
@@ -128,17 +126,28 @@ class Superadmin extends CI_Controller {
 
         $name = $this->input->post('admin_name', TRUE);
         $password = $this->input->post('password', TRUE);
-        $update_data = ['admin_name' => $name];
+        $update_data = ['superadmin_username' => $name];
 
         if (!empty($password)) {
-            $update_data['admin_password'] = password_hash($password, PASSWORD_DEFAULT);
+            $update_data['superadmin_password'] = password_hash($password, PASSWORD_DEFAULT);
         }
 
-        $this->db->where('admin_username', 'superadmin');
-        $this->db->update('admin', $update_data); // ✅ fixed table name
+        $this->db->where('superadmin_username', 'superadmin');
+        $this->db->update('superadmin', $update_data);
 
         $this->session->set_userdata('name', $name);
         $this->session->set_flashdata('success', 'Info updated successfully.');
         redirect('superadmin/change_info_view');
+    }
+
+    // ⚠ TEMPORARY FUNCTION: run once to hash the password of existing superadmin
+    public function hash_my_password_now() {
+        $plain_password = 'password123'; // your existing password
+        $hashed = password_hash($plain_password, PASSWORD_DEFAULT);
+
+        $this->db->where('superadmin_username', 'superadmin')
+                 ->update('superadmin', ['superadmin_password' => $hashed]);
+
+        echo "✅ Superadmin password has been hashed. You can now log in securely.";
     }
 }
