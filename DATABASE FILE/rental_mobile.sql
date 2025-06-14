@@ -21,6 +21,8 @@ CREATE TABLE `admin` (
 INSERT INTO `admin` (`admin_id`, `admin_name`, `admin_username`, `admin_password`) VALUES
 (1, 'Administrator', 'admin', '482c811da5d5b4bc6d497ffa98491e38');
 
+ALTER TABLE admin ADD COLUMN admin_image VARCHAR(255);
+
 -- Table structure for table `customer`
 CREATE TABLE `customer` (
   `customer_id` int(11) NOT NULL  AUTO_INCREMENT ,
