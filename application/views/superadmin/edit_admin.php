@@ -59,6 +59,11 @@
             font-size: 0.9rem;
             color: #555;
         }
+        img.preview-img {
+            max-width: 120px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 <body>
@@ -76,11 +81,15 @@
 <div class="main-container">
     <div class="container-box">
         <h2 class="mb-4">Edit Admin</h2>
-        <form method="post" action="<?= base_url('superadmin/update'); ?>">
 
+        <?php if ($this->session->flashdata('error')): ?>
+            <div class="alert alert-danger"><?= $this->session->flashdata('error'); ?></div>
+        <?php endif; ?>
+
+        <form method="post" action="<?= base_url('superadmin/update'); ?>" enctype="multipart/form-data">
             <!-- CSRF Token -->
             <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
-            
+
             <!-- Hidden Admin ID -->
             <input type="hidden" name="admin_id" value="<?= $admin->admin_id; ?>">
 
@@ -104,12 +113,27 @@
                 </div>
             </div>
 
+            <div class="mb-3">
+                <label class="form-label">Current Photo</label><br>
+                <?php if (!empty($admin->admin_image)): ?>
+                    <img src="<?= base_url('uploads/admins/' . $admin->admin_image); ?>" class="preview-img" alt="Admin Image">
+                <?php else: ?>
+                    <p class="text-muted">No image uploaded.</p>
+                <?php endif; ?>
+            </div>
+
+            <div class="mb-3">
+                <label for="admin_image" class="form-label">Change Photo</label>
+                <input type="file" class="form-control" id="admin_image" name="admin_image" accept=".jpg,.jpeg,.png">
+            </div>
+
             <button type="submit" class="btn btn-success">Update Admin</button>
             <a href="<?= base_url('superadmin/dashboard'); ?>" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
 </div>
 
+<!-- JS Libraries -->
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 <script>
     const togglePassword = document.getElementById('togglePassword');
